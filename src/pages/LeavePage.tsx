@@ -1,101 +1,106 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Check, X, Calendar, User, Clock, Filter, Search } from 'lucide-react';
+import { ChevronLeft, Check, X, Clock, Calendar, User, FileText } from 'lucide-react';
 
 interface LeaveRequest {
   id: string;
   studentName: string;
-  className: string;
-  type: 'sick' | 'casual';
+  type: 'sick' | 'personal';
   startDate: string;
   endDate: string;
   reason: string;
   status: 'pending' | 'approved' | 'rejected';
-  requestTime: string;
+  createdAt: string;
 }
 
-const LeavePage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export default function LeavePage({ onBack }: { onBack: () => void }) {
   const [activeTab, setActiveTab] = useState<'pending' | 'history'>('pending');
   const [requests, setRequests] = useState<LeaveRequest[]>([
     {
       id: '1',
-      studentName: '张三',
-      className: '午托高年级',
+      studentName: '张小明',
       type: 'sick',
-      startDate: '2026-02-24',
-      endDate: '2026-02-24',
+      startDate: '2026-02-24 14:00',
+      endDate: '2026-02-24 18:00',
       reason: '发烧去医院',
       status: 'pending',
-      requestTime: '2026-02-23 19:30'
+      createdAt: '2026-02-23 10:30'
     },
     {
       id: '2',
-      studentName: '李四',
-      className: '晚托一年级',
-      type: 'casual',
+      studentName: '李华',
+      type: 'personal',
       startDate: '2026-02-25',
-      endDate: '2026-02-26',
-      reason: '回老家探亲',
-      status: 'pending',
-      requestTime: '2026-02-23 20:15'
+      endDate: '2026-02-25',
+      reason: '家里有事',
+      status: 'approved',
+      createdAt: '2026-02-22 15:00'
     },
     {
       id: '3',
-      studentName: '王五',
-      className: '午托高年级',
+      studentName: '王强',
       type: 'sick',
       startDate: '2026-02-20',
-      endDate: '2026-02-20',
-      reason: '感冒',
-      status: 'approved',
-      requestTime: '2026-02-19 18:00'
+      endDate: '2026-02-21',
+      reason: '重感冒',
+      status: 'rejected',
+      createdAt: '2026-02-19 09:00'
     }
   ]);
 
   const handleApprove = (id: string) => {
-    setRequests(prev => prev.map(req => 
-      req.id === id ? { ...req, status: 'approved' } : req
+    setRequests(requests.map(r => 
+      r.id === id ? { ...r, status: 'approved' } : r
     ));
   };
 
   const handleReject = (id: string) => {
-    setRequests(prev => prev.map(req => 
-      req.id === id ? { ...req, status: 'rejected' } : req
+    setRequests(requests.map(r => 
+      r.id === id ? { ...r, status: 'rejected' } : r
     ));
   };
 
-  const filteredRequests = requests.filter(req => 
-    activeTab === 'pending' ? req.status === 'pending' : req.status !== 'pending'
+  const filteredRequests = requests.filter(r => 
+    activeTab === 'pending' 
+      ? r.status === 'pending'
+      : r.status !== 'pending'
   );
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      {/* Header */}
-      <div className="bg-white px-4 py-3 border-b border-slate-100 sticky top-0 z-10">
-        <div className="flex items-center gap-2 mb-2">
-          <button onClick={onBack} className="p-1 -ml-1 text-slate-600 active:bg-slate-100 rounded-full">
-            <ChevronLeft size={24} />
+    <div className="min-h-screen bg-slate-50/50 pb-6">
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 shadow-sm transition-all duration-300">
+        <div className="flex items-center gap-2 mb-3">
+          <button 
+            onClick={onBack} 
+            className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          >
+            <ChevronLeft size={22} />
           </button>
-          <h1 className="font-bold text-lg text-slate-800">请假审批</h1>
+          <h1 className="font-bold text-lg text-slate-800 tracking-tight">请假审批</h1>
         </div>
         
         {/* Tabs */}
-        <div className="flex p-1 bg-slate-100 rounded-lg">
+        <div className="flex p-1 bg-slate-100/80 rounded-xl backdrop-blur-sm">
           <button
             onClick={() => setActiveTab('pending')}
-            className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-300 ${
               activeTab === 'pending' 
-                ? 'bg-white text-blue-600 shadow-sm' 
-                : 'text-slate-500 hover:text-slate-700'
+                ? 'bg-white text-blue-600 shadow-sm scale-[1.02]' 
+                : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
             }`}
           >
-            待审批 ({requests.filter(r => r.status === 'pending').length})
+            待审批 
+            {requests.filter(r => r.status === 'pending').length > 0 && (
+              <span className="ml-1.5 inline-flex items-center justify-center bg-red-500 text-white text-[10px] h-4 min-w-[16px] px-1 rounded-full">
+                {requests.filter(r => r.status === 'pending').length}
+              </span>
+            )}
           </button>
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-300 ${
               activeTab === 'history' 
-                ? 'bg-white text-blue-600 shadow-sm' 
-                : 'text-slate-500 hover:text-slate-700'
+                ? 'bg-white text-blue-600 shadow-sm scale-[1.02]' 
+                : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
             }`}
           >
             历史记录
@@ -103,89 +108,94 @@ const LeavePage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 p-4 overflow-y-auto">
+      <div className="p-4 space-y-4">
         {filteredRequests.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-slate-400">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-3">
-              <Clock size={32} />
+          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+            <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-4 shadow-inner">
+              <FileText size={40} className="text-slate-300" />
             </div>
-            <p>暂无{activeTab === 'pending' ? '待审批' : '历史'}记录</p>
+            <p className="text-sm font-medium">暂无{activeTab === 'pending' ? '待审批' : '历史'}记录</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {filteredRequests.map(req => (
-              <div key={req.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold">
-                      {req.studentName.slice(-1)}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                        {req.studentName}
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${
-                          req.type === 'sick' 
-                            ? 'bg-red-50 text-red-600 border-red-100' 
-                            : 'bg-orange-50 text-orange-600 border-orange-100'
-                        }`}>
-                          {req.type === 'sick' ? '病假' : '事假'}
-                        </span>
-                      </h3>
-                      <p className="text-xs text-slate-500">{req.className}</p>
-                    </div>
+          filteredRequests.map(request => (
+            <div 
+              key={request.id} 
+              className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-sm ${
+                    request.type === 'sick' 
+                      ? 'bg-red-50 text-red-500 ring-2 ring-red-100' 
+                      : 'bg-blue-50 text-blue-500 ring-2 ring-blue-100'
+                  }`}>
+                    {request.studentName.charAt(0)}
                   </div>
-                  {req.status !== 'pending' && (
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      req.status === 'approved' 
-                        ? 'bg-green-50 text-green-600' 
-                        : 'bg-slate-100 text-slate-500'
-                    }`}>
-                      {req.status === 'approved' ? '已通过' : '已驳回'}
-                    </span>
-                  )}
-                </div>
-
-                <div className="bg-slate-50 rounded-lg p-3 text-sm text-slate-600 space-y-2 mb-3">
-                  <div className="flex gap-2">
-                    <Calendar size={16} className="text-slate-400 shrink-0" />
-                    <span>{req.startDate} {req.startDate !== req.endDate && `至 ${req.endDate}`}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="w-4 h-4 flex items-center justify-center shrink-0 mt-0.5">
-                      <span className="block w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
+                  <div>
+                    <div className="font-bold text-slate-800 flex items-center gap-2">
+                      {request.studentName}
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${
+                        request.type === 'sick' 
+                          ? 'bg-red-50 text-red-600 border-red-100' 
+                          : 'bg-blue-50 text-blue-600 border-blue-100'
+                      }`}>
+                        {request.type === 'sick' ? '病假' : '事假'}
+                      </span>
                     </div>
-                    <span className="leading-relaxed">{req.reason}</span>
+                    <div className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+                      <Clock size={12} />
+                      申请时间: {request.createdAt}
+                    </div>
                   </div>
                 </div>
-
-                <div className="flex justify-between items-center text-xs text-slate-400">
-                  <span>申请时间: {req.requestTime}</span>
-                </div>
-
-                {req.status === 'pending' && (
-                  <div className="flex gap-3 mt-4 pt-3 border-t border-slate-100">
-                    <button 
-                      onClick={() => handleReject(req.id)}
-                      className="flex-1 py-2 rounded-lg border border-slate-200 text-slate-600 font-medium hover:bg-slate-50 active:bg-slate-100"
-                    >
-                      驳回
-                    </button>
-                    <button 
-                      onClick={() => handleApprove(req.id)}
-                      className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-medium shadow-sm hover:bg-blue-700 active:bg-blue-800"
-                    >
-                      通过
-                    </button>
-                  </div>
+                {activeTab === 'history' && (
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
+                    request.status === 'approved' 
+                      ? 'bg-green-50 text-green-600 border-green-100' 
+                      : 'bg-red-50 text-red-600 border-red-100'
+                  }`}>
+                    {request.status === 'approved' ? '已通过' : '已驳回'}
+                  </span>
                 )}
               </div>
-            ))}
-          </div>
+
+              <div className="bg-slate-50 rounded-xl p-3 space-y-2 mb-4 border border-slate-100/50">
+                <div className="flex gap-2 text-sm">
+                  <span className="text-slate-400 w-16 flex-shrink-0 flex items-center gap-1">
+                    <Calendar size={14} /> 时间
+                  </span>
+                  <span className="text-slate-700 font-medium break-all">
+                    {request.startDate} 至 {request.endDate}
+                  </span>
+                </div>
+                <div className="flex gap-2 text-sm">
+                  <span className="text-slate-400 w-16 flex-shrink-0 flex items-center gap-1">
+                    <FileText size={14} /> 原因
+                  </span>
+                  <span className="text-slate-700 font-medium break-all">{request.reason}</span>
+                </div>
+              </div>
+
+              {request.status === 'pending' && (
+                <div className="flex gap-3 pt-1">
+                  <button 
+                    onClick={() => handleReject(request.id)}
+                    className="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <X size={16} /> 驳回
+                  </button>
+                  <button 
+                    onClick={() => handleApprove(request.id)}
+                    className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 hover:bg-blue-700"
+                  >
+                    <Check size={16} /> 通过
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
         )}
       </div>
     </div>
   );
-};
-
-export default LeavePage;
+}

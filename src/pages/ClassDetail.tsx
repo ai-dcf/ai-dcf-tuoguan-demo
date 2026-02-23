@@ -26,47 +26,54 @@ const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab =
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50">
+    <div className="flex flex-col h-screen bg-[#F5F7FA]">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 sticky top-0 z-20">
-        <button onClick={onBack} className="p-1 -ml-1 text-slate-600 active:bg-slate-100 rounded-full">
+      <div className="bg-white/80 backdrop-blur-md border-b border-slate-100/50 px-4 py-3 flex items-center gap-3 sticky top-0 z-50 transition-all">
+        <button 
+          onClick={onBack} 
+          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/50 rounded-full transition-colors active:scale-95"
+        >
           <ChevronLeft size={24} />
         </button>
-        <h1 className="font-bold text-lg text-slate-900">
-          {classId === 'lunch-high' ? '午托高年级' : '晚托一年级'}
-        </h1>
+        <div>
+            <h1 className="font-bold text-lg text-slate-800 tracking-tight leading-tight">
+            {classId === 'lunch-high' ? '午托高年级' : '晚托一年级'}
+            </h1>
+            <p className="text-[10px] text-slate-500 font-medium">托管班管理</p>
+        </div>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white border-b border-slate-200 flex justify-around px-2 sticky top-14 z-20">
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.id;
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as Tab)}
-              className={`flex flex-col items-center py-3 px-2 relative transition-colors ${
-                isActive ? 'text-blue-600' : 'text-slate-500'
-              }`}
-            >
-              <Icon size={20} className="mb-1" />
-              <span className="text-xs font-medium">{tab.label}</span>
-              {isActive && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full mx-4" />
-              )}
-            </button>
-          );
-        })}
+      {/* Floating Tabs */}
+      <div className="sticky top-[60px] z-40 px-3 py-2 bg-[#F5F7FA]/90 backdrop-blur-sm">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100/50 p-1 flex justify-around">
+            {tabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            const Icon = tab.icon;
+            return (
+                <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as Tab)}
+                className={`flex flex-col items-center py-2 px-3 rounded-xl relative transition-all duration-300 ${
+                    isActive ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                }`}
+                >
+                <Icon size={20} className={`mb-1 transition-transform ${isActive ? 'scale-110' : ''}`} strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-[10px] font-bold">{tab.label}</span>
+                </button>
+            );
+            })}
+        </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto bg-slate-50">
-        {activeTab === 'attendance' && <AttendanceView />}
-        {activeTab === 'homework' && <HomeworkView />}
-        {activeTab === 'review' && <ReviewView />}
-        {activeTab === 'history' && <HistoryView />}
-        {activeTab === 'affairs' && <ClassAffairsView />}
+      <div className="flex-1 overflow-y-auto pb-6">
+        <div className="animate-in fade-in duration-500">
+            {activeTab === 'attendance' && <AttendanceView />}
+            {activeTab === 'homework' && <HomeworkView />}
+            {activeTab === 'review' && <ReviewView />}
+            {activeTab === 'history' && <HistoryView />}
+            {activeTab === 'affairs' && <ClassAffairsView />}
+        </div>
       </div>
     </div>
   );

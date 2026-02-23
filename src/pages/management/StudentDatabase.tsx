@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Search, Filter, MoreHorizontal, Phone, User, Calendar, Edit, Trash2, X } from 'lucide-react';
+import { ChevronLeft, Plus, Search, Filter, MoreHorizontal, Phone, User, Calendar, Edit, Trash2, X, Check, ArrowUp } from 'lucide-react';
 import { dataManager } from '../../utils/dataManager';
 import type { Student } from '../../utils/dataManager';
 
@@ -37,53 +37,103 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
     return <AddStudentForm onBack={() => setView('list')} onSave={handleAddStudent} />;
   }
 
+  // Simplified detail view for now
   if (view === 'detail' && selectedStudent) {
-    return <StudentDetailView student={selectedStudent} onBack={() => setView('list')} />;
+    return (
+      <div className="bg-slate-50/50 min-h-screen flex flex-col">
+         <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 flex items-center justify-between shadow-sm">
+            <button onClick={() => setView('list')} className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 rounded-full transition-all">
+              <ChevronLeft size={22} />
+            </button>
+            <h1 className="font-bold text-lg text-slate-800">学生档案</h1>
+            <button className="text-blue-600 font-medium text-sm">编辑</button>
+         </div>
+         <div className="p-4">
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col items-center mb-4">
+               <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 text-3xl font-bold shadow-inner mb-4 ring-4 ring-white">
+                  {selectedStudent.name[0]}
+               </div>
+               <h2 className="text-2xl font-bold text-slate-800 mb-1">{selectedStudent.name}</h2>
+               <div className="flex items-center gap-2 mb-4">
+                  <span className="px-3 py-1 bg-slate-100 rounded-full text-xs font-bold text-slate-600">{selectedStudent.grade}</span>
+                  <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-bold border border-green-100">
+                    {selectedStudent.status === 'active' ? '在读' : '毕业'}
+                  </span>
+               </div>
+            </div>
+            
+            <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-4">
+                <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wider text-slate-400">基本信息</h3>
+                <div className="grid grid-cols-1 gap-4">
+                    <div className="flex items-center justify-between py-2 border-b border-slate-50">
+                        <span className="text-slate-500 text-sm">联系电话</span>
+                        <span className="font-medium text-slate-800">{selectedStudent.phone}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-slate-50">
+                        <span className="text-slate-500 text-sm">家长姓名</span>
+                        <span className="font-medium text-slate-800">{selectedStudent.parent}</span>
+                    </div>
+                     <div className="flex items-center justify-between py-2 border-b border-slate-50">
+                        <span className="text-slate-500 text-sm">入学日期</span>
+                        <span className="font-medium text-slate-800">{selectedStudent.enrollDate}</span>
+                    </div>
+                     <div className="py-2">
+                        <span className="text-slate-500 text-sm block mb-1">家庭住址</span>
+                        <span className="font-medium text-slate-800">{selectedStudent.address || '未填写'}</span>
+                    </div>
+                </div>
+            </div>
+         </div>
+      </div>
+    )
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
+    <div className="bg-slate-50/50 min-h-screen flex flex-col">
       {/* Header */}
-      <div className="bg-white px-4 py-3 border-b border-slate-100 sticky top-0 z-10 space-y-3">
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 space-y-3 shadow-sm transition-all duration-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-             <button onClick={onBack} className="p-1 -ml-1 text-slate-600 active:bg-slate-100 rounded-full">
-              <ChevronLeft size={24} />
+             <button 
+               onClick={onBack} 
+               className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+             >
+              <ChevronLeft size={22} />
             </button>
-            <h1 className="font-bold text-lg text-slate-800">学生总库</h1>
+            <h1 className="font-bold text-lg text-slate-800 tracking-tight">学生总库</h1>
           </div>
           <button 
             onClick={() => setView('add')}
-            className="text-blue-600 font-medium text-sm flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-full active:bg-blue-100"
+            className="text-white text-sm font-bold flex items-center gap-1.5 bg-blue-600 px-3.5 py-1.5 rounded-full shadow-md shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all"
           >
-            <Plus size={16} />
+            <Plus size={16} strokeWidth={2.5} />
             新增
           </button>
         </div>
         
         {/* Search & Filter */}
         <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+          <div className="flex-1 relative group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
             <input 
               type="text" 
               placeholder="搜索姓名/手机号" 
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 transition-shadow"
+              className="w-full pl-9 pr-3 py-2.5 bg-slate-100 border-transparent border-2 focus:border-blue-500/20 focus:bg-white rounded-xl text-sm focus:outline-none transition-all font-medium"
             />
           </div>
           <div className="relative">
             <select 
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as any)}
-              className="h-full px-3 bg-slate-100 rounded-lg text-sm text-slate-600 focus:outline-none appearance-none pr-8"
+              className="h-full px-3 pl-3 pr-8 bg-slate-100 border-transparent border-2 focus:border-blue-500/20 focus:bg-white rounded-xl text-sm font-bold text-slate-600 focus:outline-none appearance-none transition-all"
             >
               <option value="all">全部</option>
               <option value="active">在读</option>
               <option value="graduated">毕业</option>
             </select>
-            <Filter className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
+            <Filter className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
           </div>
         </div>
       </div>
@@ -94,23 +144,27 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
           <div 
             key={student.id} 
             onClick={() => handleStudentClick(student)}
-            className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex items-center gap-3 active:scale-[0.99] transition-transform cursor-pointer"
+            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 active:scale-[0.99] hover:shadow-md transition-all duration-300 cursor-pointer group"
           >
-            <div className="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center font-bold text-lg">
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-inner ring-2 ring-white transition-transform group-hover:scale-105 ${
+                student.status === 'active' 
+                    ? 'bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600'
+                    : 'bg-slate-100 text-slate-400'
+            }`}>
               {student.name[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-start">
-                <h3 className="font-bold text-slate-800 truncate">{student.name}</h3>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                  student.status === 'active' ? 'bg-green-50 text-green-600' : 
-                  student.status === 'graduated' ? 'bg-slate-100 text-slate-500' : 'bg-orange-50 text-orange-600'
+              <div className="flex justify-between items-start mb-1">
+                <h3 className="font-bold text-slate-800 truncate text-base group-hover:text-blue-600 transition-colors">{student.name}</h3>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${
+                  student.status === 'active' ? 'bg-green-50 text-green-600 border-green-100' : 
+                  student.status === 'graduated' ? 'bg-slate-100 text-slate-500 border-slate-200' : 'bg-orange-50 text-orange-600 border-orange-100'
                 }`}>
                   {student.status === 'active' ? '在读' : student.status === 'graduated' ? '毕业' : '休学'}
                 </span>
               </div>
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-2">
-                <span className="bg-slate-50 px-1.5 py-0.5 rounded text-slate-600">{student.grade} {student.class}</span>
+              <div className="text-xs text-slate-500 flex items-center gap-3">
+                <span className="bg-slate-50 px-2 py-0.5 rounded-md font-medium text-slate-600">{student.grade}</span>
                 <span className="flex items-center gap-1 text-slate-400">
                   <User size={12} />
                   {student.parent}
@@ -118,7 +172,7 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
               </div>
             </div>
             <div className="flex items-center" onClick={e => e.stopPropagation()}>
-               <a href={`tel:${student.phone}`} className="p-2 text-slate-400 hover:text-green-500 active:bg-slate-50 rounded-full transition-colors">
+               <a href={`tel:${student.phone}`} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-green-500 hover:bg-green-50 active:scale-90 rounded-full transition-all">
                 <Phone size={20} />
               </a>
             </div>
@@ -126,12 +180,12 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
         ))}
         
         {filteredStudents.length === 0 && (
-            <div className="text-center py-12 text-slate-400">
-                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Search size={24} className="text-slate-300" />
-                </div>
-                <p>未找到相关学生</p>
+          <div className="text-center py-20 text-slate-400">
+            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <Search size={32} className="text-slate-300" />
             </div>
+            <p className="font-medium">未找到相关学生</p>
+          </div>
         )}
       </div>
     </div>
@@ -157,108 +211,120 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      <div className="bg-white px-4 py-3 border-b border-slate-100 flex items-center justify-between sticky top-0 z-10">
-        <button onClick={onBack} className="text-slate-600">取消</button>
+    <div className="bg-slate-50/50 min-h-screen flex flex-col">
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+        <button onClick={onBack} className="text-slate-600 font-medium hover:bg-slate-100 px-3 py-1.5 rounded-lg transition-colors">取消</button>
         <h1 className="font-bold text-lg text-slate-800">新增学生</h1>
         <button 
           onClick={handleSubmit}
           disabled={!formData.name || !formData.phone}
-          className="text-blue-600 font-medium disabled:text-slate-300"
+          className="text-white text-sm font-bold bg-blue-600 px-4 py-1.5 rounded-full shadow-md shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed"
         >
           保存
         </button>
       </div>
 
-      <div className="p-4 space-y-4 overflow-y-auto flex-1">
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
-          <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2">基本信息</h3>
+      <div className="p-4 space-y-4 overflow-y-auto flex-1 pb-10">
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-5">
+          <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-2">
+            <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
+            基本信息
+          </h3>
           <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">学生姓名 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">学生姓名 <span className="text-red-500">*</span></label>
             <input 
               type="text" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               placeholder="请输入姓名"
               value={formData.name}
               onChange={e => setFormData({...formData, name: e.target.value})}
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
              <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">年级</label>
-              <select 
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-                value={formData.grade}
-                onChange={e => setFormData({...formData, grade: e.target.value})}
-              >
-                {['一年级', '二年级', '三年级', '四年级', '五年级', '六年级', '初一', '初二', '初三'].map(g => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-              </select>
+              <label className="block text-sm font-bold text-slate-700 mb-2">年级</label>
+              <div className="relative">
+                <select 
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none transition-all"
+                    value={formData.grade}
+                    onChange={e => setFormData({...formData, grade: e.target.value})}
+                >
+                    {['一年级', '二年级', '三年级', '四年级', '五年级', '六年级', '初一', '初二', '初三'].map(g => (
+                    <option key={g} value={g}>{g}</option>
+                    ))}
+                </select>
+                <ChevronLeft className="absolute right-3 top-1/2 -translate-y-1/2 rotate-[-90deg] text-slate-400 pointer-events-none" size={16} />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">班级</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">班级</label>
               <input 
                 type="text" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-                placeholder="例: 1班"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                placeholder="例如: 1班"
                 value={formData.class}
                 onChange={e => setFormData({...formData, class: e.target.value})}
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">入学日期</label>
-            <input 
-              type="date" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-              value={formData.enrollDate}
-              onChange={e => setFormData({...formData, enrollDate: e.target.value})}
-            />
+          
+           <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">入学日期</label>
+            <div className="relative">
+                <input 
+                type="date" 
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                value={formData.enrollDate}
+                onChange={e => setFormData({...formData, enrollDate: e.target.value})}
+                />
+                <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={18} />
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
-          <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2">家庭信息</h3>
-          <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">家长姓名</label>
-            <input 
-              type="text" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-              placeholder="请输入家长姓名"
-              value={formData.parent}
-              onChange={e => setFormData({...formData, parent: e.target.value})}
-            />
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-5">
+           <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-2">
+            <div className="w-1 h-4 bg-green-500 rounded-full"></div>
+            家庭信息
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+             <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">家长姓名</label>
+                <input 
+                type="text" 
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                placeholder="请输入"
+                value={formData.parent}
+                onChange={e => setFormData({...formData, parent: e.target.value})}
+                />
+             </div>
+             <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">联系电话 <span className="text-red-500">*</span></label>
+                <input 
+                type="tel" 
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                placeholder="请输入"
+                value={formData.phone}
+                onChange={e => setFormData({...formData, phone: e.target.value})}
+                />
+             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">联系电话 <span className="text-red-500">*</span></label>
-            <input 
-              type="tel" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-              placeholder="请输入手机号"
-              value={formData.phone}
-              onChange={e => setFormData({...formData, phone: e.target.value})}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">家庭住址</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">家庭住址</label>
             <input 
               type="text" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               placeholder="请输入详细地址"
               value={formData.address}
               onChange={e => setFormData({...formData, address: e.target.value})}
             />
           </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
-          <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2">其他信息</h3>
-          <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1">备注</label>
+           <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">备注信息</label>
             <textarea 
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 h-24 resize-none"
-              placeholder="例如：过敏史、性格特点等"
+              rows={3}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+              placeholder="请输入备注..."
               value={formData.notes}
               onChange={e => setFormData({...formData, notes: e.target.value})}
             />
@@ -268,68 +334,5 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
     </div>
   );
 };
-
-const StudentDetailView: React.FC<{ student: Student, onBack: () => void }> = ({ student, onBack }) => {
-  return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      <div className="bg-white px-4 py-3 border-b border-slate-100 flex items-center justify-between sticky top-0 z-10">
-        <button onClick={onBack} className="text-slate-600">
-          <ChevronLeft size={24} />
-        </button>
-        <h1 className="font-bold text-lg text-slate-800">学生详情</h1>
-        <button className="text-slate-600">
-          <Edit size={20} />
-        </button>
-      </div>
-
-      <div className="p-4 space-y-4 overflow-y-auto flex-1">
-        {/* Profile Card */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 flex flex-col items-center">
-          <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-3xl mb-3">
-            {student.name[0]}
-          </div>
-          <h2 className="text-xl font-bold text-slate-800">{student.name}</h2>
-          <div className="text-slate-500 text-sm mt-1 mb-4">{student.grade} {student.class}</div>
-          
-          <div className="flex gap-3 w-full">
-            <a 
-              href={`tel:${student.phone}`}
-              className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-50 text-blue-600 rounded-lg font-medium active:bg-blue-100 transition-colors"
-            >
-              <Phone size={18} /> 呼叫家长
-            </a>
-            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-slate-50 text-slate-600 rounded-lg font-medium active:bg-slate-100 transition-colors">
-              <Calendar size={18} /> 考勤记录
-            </button>
-          </div>
-        </div>
-
-        {/* Info List */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-          <InfoRow label="学籍状态" value={student.status === 'active' ? '在读' : student.status === 'graduated' ? '毕业' : '休学'} />
-          <InfoRow label="家长姓名" value={student.parent || '未填写'} />
-          <InfoRow label="联系电话" value={student.phone} />
-          <InfoRow label="入学日期" value={student.enrollDate || '未填写'} />
-          <InfoRow label="家庭住址" value={student.address || '未填写'} />
-          <InfoRow label="备注信息" value={student.notes || '无'} last />
-        </div>
-
-        {/* Danger Zone */}
-        <div className="mt-8">
-           <button className="w-full py-3 bg-white text-red-500 font-medium rounded-xl border border-red-100 shadow-sm active:bg-red-50 flex items-center justify-center gap-2">
-             <Trash2 size={18} /> 删除学生
-           </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const InfoRow = ({ label, value, last }: { label: string, value: string, last?: boolean }) => (
-  <div className={`flex justify-between items-center p-4 ${!last && 'border-b border-slate-50'}`}>
-    <span className="text-slate-500 text-sm">{label}</span>
-    <span className="text-slate-800 text-sm font-medium">{value}</span>
-  </div>
-);
 
 export default StudentDatabase;

@@ -1,156 +1,220 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Image as ImageIcon, Send, Bell, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Plus, Bell, Clock, Eye, Send } from 'lucide-react';
 
 interface Notification {
   id: string;
   title: string;
   content: string;
+  author: string;
   date: string;
-  target: string[];
-  status: 'sent' | 'draft';
   readCount: number;
   totalCount: number;
+  isUrgent?: boolean;
 }
 
-const ClassNotification: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export default function ClassNotification({ onBack }: { onBack: () => void }) {
   const [view, setView] = useState<'list' | 'create'>('list');
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: '1',
-      title: '本周五春游活动安排',
-      content: '各位家长好，本周五我们将组织春游活动，请为孩子准备好水壶和零食...',
-      date: '2026-02-23 10:00',
-      target: ['全班家长'],
-      status: 'sent',
-      readCount: 15,
-      totalCount: 18
+      title: '本周五家长会通知',
+      content: '请各位家长于本周五下午3点准时参加家长会，地点在教学楼301会议室。届时将讨论本学期的教学计划和学生的学习情况，请务必出席。',
+      author: '张老师',
+      date: '2026-02-23 09:00',
+      readCount: 25,
+      totalCount: 30,
+      isUrgent: true
     },
     {
       id: '2',
-      title: '关于近期流感高发的提醒',
-      content: '近期流感高发，请各位家长注意孩子身体状况...',
-      date: '2026-02-20 14:30',
-      target: ['全班家长'],
-      status: 'sent',
+      title: '春季运动会报名开始',
+      content: '一年一度的春季运动会即将开始，请有意向报名的同学在班长处登记。项目包括跑步、跳远、跳高等。',
+      author: '李老师',
+      date: '2026-02-21 14:30',
       readCount: 18,
-      totalCount: 18
+      totalCount: 30
+    },
+    {
+      id: '3',
+      title: '关于调整放学时间的通知',
+      content: '从下周一开始，放学时间调整为下午5点半，请各位家长注意接送时间。',
+      author: '王老师',
+      date: '2026-02-20 10:00',
+      readCount: 30,
+      totalCount: 30
     }
   ]);
 
-  const handlePublish = (data: { title: string, content: string }) => {
-    const newNotif: Notification = {
+  const [newTitle, setNewTitle] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [isUrgent, setIsUrgent] = useState(false);
+
+  const handlePublish = () => {
+    if (!newTitle || !newContent) return;
+    
+    const newNotification: Notification = {
       id: Date.now().toString(),
-      title: data.title,
-      content: data.content,
+      title: newTitle,
+      content: newContent,
+      author: '我',
       date: new Date().toLocaleString(),
-      target: ['全班家长'],
-      status: 'sent',
       readCount: 0,
-      totalCount: 18
+      totalCount: 30,
+      isUrgent
     };
-    setNotifications([newNotif, ...notifications]);
+    
+    setNotifications([newNotification, ...notifications]);
     setView('list');
+    setNewTitle('');
+    setNewContent('');
+    setIsUrgent(false);
   };
 
   if (view === 'create') {
-    return <CreateNotification onBack={() => setView('list')} onPublish={handlePublish} />;
+    return (
+      <div className="min-h-screen bg-slate-50/50 flex flex-col">
+        <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 flex items-center gap-2">
+          <button 
+            onClick={() => setView('list')} 
+            className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          >
+            <ChevronLeft size={22} />
+          </button>
+          <h1 className="font-bold text-lg text-slate-800">发布通知</h1>
+        </div>
+        
+        <div className="p-4 flex-1 overflow-y-auto">
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">通知标题</label>
+              <input
+                type="text"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="请输入标题"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">通知内容</label>
+              <textarea
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                placeholder="请输入详细内容..."
+                rows={8}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium resize-none"
+              />
+            </div>
+            
+            <div className="flex items-center gap-3 py-2">
+              <div 
+                onClick={() => setIsUrgent(!isUrgent)}
+                className={`w-12 h-7 rounded-full relative transition-colors duration-300 cursor-pointer ${isUrgent ? 'bg-red-500' : 'bg-slate-200'}`}
+              >
+                <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 ${isUrgent ? 'translate-x-5' : ''}`} />
+              </div>
+              <span className="text-sm font-medium text-slate-700">设为紧急通知</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-4 bg-white border-t border-slate-100 sticky bottom-0 safe-area-bottom">
+          <button
+            onClick={handlePublish}
+            disabled={!newTitle || !newContent}
+            className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 ${
+              !newTitle || !newContent 
+                ? 'bg-slate-300 shadow-none cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
+            <Send size={18} />
+            立即发布
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      <div className="bg-white px-4 py-3 border-b border-slate-100 sticky top-0 z-10">
-        <div className="flex items-center justify-between mb-2">
+    <div className="min-h-screen bg-slate-50/50 pb-6">
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 shadow-sm transition-all duration-300">
+        <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
-            <button onClick={onBack} className="p-1 -ml-1 text-slate-600 active:bg-slate-100 rounded-full">
-              <ChevronLeft size={24} />
+            <button 
+              onClick={onBack} 
+              className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+            >
+              <ChevronLeft size={22} />
             </button>
-            <h1 className="font-bold text-lg text-slate-800">班级通知</h1>
+            <h1 className="font-bold text-lg text-slate-800 tracking-tight">班级通知</h1>
           </div>
           <button 
             onClick={() => setView('create')}
-            className="flex items-center gap-1 text-blue-600 text-sm font-medium bg-blue-50 px-3 py-1.5 rounded-full active:bg-blue-100"
+            className="flex items-center gap-1.5 text-white text-sm font-bold bg-blue-600 px-4 py-2 rounded-full shadow-md shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all"
           >
-            <Plus size={16} /> 发布
+            <Plus size={16} strokeWidth={2.5} /> 发布
           </button>
         </div>
       </div>
 
-      <div className="p-4 space-y-3">
-        {notifications.map(notif => (
-          <div key={notif.id} className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-bold text-slate-800 text-base">{notif.title}</h3>
-              <span className="text-xs text-slate-400">{notif.date.split(' ')[0]}</span>
-            </div>
-            <p className="text-sm text-slate-600 mb-3 line-clamp-2">{notif.content}</p>
-            
-            <div className="flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-50">
-              <div className="flex items-center gap-2">
-                <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600">
-                  {notif.target.join(', ')}
-                </span>
+      <div className="p-4 space-y-4">
+        {notifications.map(note => (
+          <div 
+            key={note.id} 
+            className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-start gap-3">
+                <div className={`mt-0.5 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${
+                  note.isUrgent 
+                    ? 'bg-red-50 text-red-500 ring-2 ring-red-100' 
+                    : 'bg-blue-50 text-blue-500 ring-2 ring-blue-100'
+                }`}>
+                  <Bell size={20} className={note.isUrgent ? 'animate-pulse' : ''} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-800 text-base leading-tight mb-1 group-hover:text-blue-600 transition-colors">
+                    {note.title}
+                  </h3>
+                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <span className="font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">{note.author}</span>
+                    <span className="flex items-center gap-0.5"><Clock size={10} /> {note.date}</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <CheckCircle size={14} className="text-green-500" />
-                <span>已读 {notif.readCount}/{notif.totalCount}</span>
+              {note.isUrgent && (
+                <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full border border-red-100 flex-shrink-0 animate-pulse">
+                  紧急
+                </span>
+              )}
+            </div>
+
+            <p className="text-slate-600 text-sm leading-relaxed mb-4 pl-[52px]">
+              {note.content}
+            </p>
+
+            <div className="flex items-center justify-between pt-3 border-t border-slate-50 pl-[52px]">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+                <Eye size={14} className="text-blue-400" />
+                <span>已读 {note.readCount}/{note.totalCount}</span>
+              </div>
+              
+              <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                  style={{ width: `${(note.readCount / note.totalCount) * 100}%` }}
+                />
               </div>
             </div>
           </div>
         ))}
-      </div>
-    </div>
-  );
-};
-
-const CreateNotification: React.FC<{ onBack: () => void, onPublish: (data: any) => void }> = ({ onBack, onPublish }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-
-  return (
-    <div className="bg-white min-h-screen flex flex-col">
-      <div className="px-4 py-3 border-b border-slate-100 sticky top-0 bg-white z-10 flex items-center justify-between">
-        <button onClick={onBack} className="text-slate-600">取消</button>
-        <h1 className="font-bold text-lg text-slate-800">发布通知</h1>
-        <button 
-          onClick={() => onPublish({ title, content })}
-          disabled={!title || !content}
-          className="text-blue-600 font-medium disabled:text-slate-300"
-        >
-          发布
-        </button>
-      </div>
-
-      <div className="p-4 flex-1">
-        <input
-          type="text"
-          placeholder="请输入通知标题"
-          className="w-full text-lg font-bold placeholder:text-slate-300 border-none outline-none mb-4"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-        />
-        <textarea
-          placeholder="请输入通知正文..."
-          className="w-full h-64 text-base text-slate-600 placeholder:text-slate-300 border-none outline-none resize-none"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-        />
         
-        <div className="flex gap-4 mt-4">
-          <button className="w-20 h-20 bg-slate-50 rounded-lg border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400">
-            <ImageIcon size={24} />
-            <span className="text-xs mt-1">添加图片</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="p-4 border-t border-slate-100 bg-slate-50">
-        <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-200">
-          <span className="text-sm text-slate-600">发送范围</span>
-          <span className="text-sm font-medium text-slate-800">全班家长 &gt;</span>
+        <div className="text-center py-6">
+          <p className="text-xs text-slate-400">没有更多通知了</p>
         </div>
       </div>
     </div>
   );
-};
-
-export default ClassNotification;
+}

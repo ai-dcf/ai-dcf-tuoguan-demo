@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Users, BookOpen, MoreHorizontal, Edit, Trash, Search, CheckCircle, Circle } from 'lucide-react';
+import { ChevronLeft, Plus, Users, Search, CheckCircle, Circle, Trash, MoreHorizontal, Calendar, ArrowRight } from 'lucide-react';
 import { dataManager } from '../../utils/dataManager';
 import type { ClassItem, Student } from '../../utils/dataManager';
 
@@ -35,14 +35,14 @@ const StudentSelector: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl w-full max-w-sm h-[80vh] flex flex-col animate-in fade-in zoom-in duration-200">
-        <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl w-full max-w-sm h-[80vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
           <h3 className="font-bold text-lg text-slate-800">关联学生</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">✕</button>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all">✕</button>
         </div>
         
-        <div className="p-4 border-b border-slate-50">
+        <div className="p-4 border-b border-slate-50 bg-slate-50/50">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input 
@@ -50,45 +50,52 @@ const StudentSelector: React.FC<{
               placeholder="搜索姓名或手机号" 
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             />
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto p-2">
+        <div className="flex-1 overflow-auto p-2 space-y-1">
           {availableStudents.length > 0 ? (
             availableStudents.map(student => (
               <div 
                 key={student.id}
                 onClick={() => toggleSelection(student.id)}
-                className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg cursor-pointer active:bg-slate-100"
+                className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all border ${
+                  selectedIds.includes(student.id) 
+                    ? 'bg-blue-50 border-blue-100' 
+                    : 'hover:bg-slate-50 border-transparent'
+                }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 text-sm font-bold">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-sm ${
+                    selectedIds.includes(student.id) ? 'bg-blue-200 text-blue-700' : 'bg-slate-100 text-slate-500'
+                  }`}>
                     {student.name[0]}
                   </div>
                   <div>
-                    <div className="font-medium text-slate-700">{student.name}</div>
-                    <div className="text-xs text-slate-400">{student.phone}</div>
+                    <div className={`font-bold ${selectedIds.includes(student.id) ? 'text-blue-900' : 'text-slate-700'}`}>{student.name}</div>
+                    <div className="text-xs text-slate-400 font-medium">{student.phone}</div>
                   </div>
                 </div>
-                <div className={selectedIds.includes(student.id) ? "text-blue-600" : "text-slate-300"}>
-                  {selectedIds.includes(student.id) ? <CheckCircle size={24} className="fill-blue-50" /> : <Circle size={24} />}
+                <div className={selectedIds.includes(student.id) ? "text-blue-600 scale-110 transition-transform" : "text-slate-300"}>
+                  {selectedIds.includes(student.id) ? <CheckCircle size={22} className="fill-blue-100" /> : <Circle size={22} />}
                 </div>
               </div>
             ))
           ) : (
-            <div className="text-center py-10 text-slate-400 text-sm">
-              没有找到可关联的学生
+            <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+              <Users size={40} className="text-slate-200 mb-3" />
+              <p className="text-sm font-medium">没有找到可关联的学生</p>
             </div>
           )}
         </div>
 
-        <div className="p-4 border-t border-slate-100">
+        <div className="p-4 border-t border-slate-100 bg-white safe-area-bottom">
           <button 
             onClick={handleConfirm}
             disabled={selectedIds.length === 0}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] transition-transform"
+            className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98] transition-all"
           >
             确认添加 ({selectedIds.length})
           </button>
@@ -108,73 +115,86 @@ const ClassDetailView: React.FC<{
   const [showSelector, setShowSelector] = useState(false);
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      <div className="bg-white px-4 py-3 border-b border-slate-100 flex items-center justify-between sticky top-0 z-10">
-        <button onClick={onBack} className="text-slate-600">
-          <ChevronLeft size={24} />
+    <div className="bg-slate-50/50 min-h-screen flex flex-col">
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+        <button 
+          onClick={onBack} 
+          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+        >
+          <ChevronLeft size={22} />
         </button>
-        <h1 className="font-bold text-lg text-slate-800">班级详情</h1>
-        <button onClick={() => onDelete(cls.id)} className="text-red-500">
+        <h1 className="font-bold text-lg text-slate-800 tracking-tight">班级详情</h1>
+        <button 
+          onClick={() => onDelete(cls.id)} 
+          className="p-2 -mr-2 text-red-500 hover:bg-red-50 active:scale-95 rounded-full transition-all"
+        >
           <Trash size={20} />
         </button>
       </div>
 
-      <div className="p-4 space-y-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-800 mb-1">{cls.name}</h2>
-          <div className="flex items-center gap-2 text-slate-500 text-sm mb-4">
-            <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-xs">{cls.grade}</span>
-            <span>•</span>
-            <span>班主任：{cls.teacher}</span>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-slate-800">{cls.studentCount}</div>
-              <div className="text-xs text-slate-500 mt-1">学生人数</div>
+      <div className="p-4 space-y-5">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-6 rounded-3xl text-white shadow-lg shadow-blue-200 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+          <div className="relative z-10">
+            <h2 className="text-2xl font-bold mb-2">{cls.name}</h2>
+            <div className="flex items-center gap-3 text-blue-100 text-sm mb-6">
+              <span className="bg-white/20 px-2.5 py-0.5 rounded-full text-xs font-bold backdrop-blur-sm">{cls.grade}</span>
+              <span className="w-1 h-1 bg-blue-300 rounded-full"></span>
+              <span className="font-medium">班主任：{cls.teacher}</span>
             </div>
-            <div className="text-center border-l border-slate-100">
-              <div className="text-2xl font-bold text-slate-800">0</div>
-              <div className="text-xs text-slate-500 mt-1">今日缺勤</div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-center border border-white/10">
+                <div className="text-2xl font-bold">{cls.studentCount}</div>
+                <div className="text-xs text-blue-100 mt-1 font-medium">学生人数</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 text-center border border-white/10">
+                <div className="text-2xl font-bold">0</div>
+                <div className="text-xs text-blue-100 mt-1 font-medium">今日缺勤</div>
+              </div>
             </div>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-3 px-1">
-            <h3 className="font-bold text-slate-800">班级成员</h3>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <h3 className="font-bold text-slate-800 text-base">班级成员</h3>
             <button 
               onClick={() => setShowSelector(true)}
-              className="text-blue-600 text-sm font-medium flex items-center gap-1 active:opacity-70"
+              className="text-blue-600 text-sm font-bold flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 active:scale-95 transition-all"
             >
-              <Plus size={16} />
+              <Plus size={16} strokeWidth={2.5} />
               关联学生
             </button>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {cls.students && cls.students.length > 0 ? (
               cls.students.map(student => (
-                <div key={student.id} className="bg-white p-3 rounded-lg border border-slate-100 flex items-center justify-between group">
+                <div 
+                  key={student.id} 
+                  className="bg-white p-4 rounded-2xl border border-slate-100 flex items-center justify-between group shadow-sm hover:shadow-md transition-all duration-300"
+                >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 text-xs font-bold">
+                    <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center text-slate-600 text-sm font-bold shadow-inner ring-2 ring-white">
                       {student.name[0]}
                     </div>
-                    <span className="font-medium text-slate-700">{student.name}</span>
+                    <div>
+                      <div className="font-bold text-slate-800">{student.name}</div>
+                      <div className="text-xs text-slate-400 mt-0.5 font-medium">{student.phone}</div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-slate-400 text-sm">{student.phone}</span>
-                    <button 
-                      onClick={() => onRemoveStudent(student.id)}
-                      className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"
-                    >
-                      <Trash size={16} />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => onRemoveStudent(student.id)}
+                    className="text-slate-300 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all"
+                  >
+                    <Trash size={18} />
+                  </button>
                 </div>
               ))
             ) : (
-              <div className="text-center py-8 text-slate-400 bg-white rounded-xl border border-dashed border-slate-200">
-                暂无学生
+              <div className="flex flex-col items-center justify-center py-12 text-slate-400 bg-white rounded-3xl border border-dashed border-slate-200">
+                <Users size={32} className="text-slate-200 mb-2" />
+                <span className="text-sm font-medium">暂无学生，点击上方按钮添加</span>
               </div>
             )}
           </div>
@@ -198,67 +218,41 @@ const ClassDetailView: React.FC<{
 const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
   const [view, setView] = useState<'list' | 'detail'>('list');
   const [selectedClass, setSelectedClass] = useState<ClassItem | null>(null);
-  const [classes, setClasses] = useState<ClassItem[]>(dataManager.getClasses());
-
-  const [showModal, setShowModal] = useState(false);
-  const [newClass, setNewClass] = useState({ name: '', grade: '一年级', teacher: '' });
-
-  const handleAddClass = () => {
-    if (newClass.name && newClass.teacher) {
-      const cls = { 
-        id: Date.now(), 
-        ...newClass, 
-        studentCount: 0,
-        students: []
-      };
-      dataManager.addClass(cls);
-      setClasses(dataManager.getClasses());
-      setShowModal(false);
-      setNewClass({ name: '', grade: '一年级', teacher: '' });
-    }
-  };
+  
+  // Force update to reflect data changes
+  const [_, setForceUpdate] = useState(0);
+  const classes = dataManager.getClasses();
 
   const handleClassClick = (cls: ClassItem) => {
     setSelectedClass(cls);
     setView('detail');
   };
 
-  const handleDeleteClass = (id: number) => {
-    if (confirm('确定要删除这个班级吗？')) {
-      dataManager.deleteClass(id);
-      setClasses(dataManager.getClasses());
-      setView('list');
-      setSelectedClass(null);
+  const handleAddStudents = (students: Student[]) => {
+    if (selectedClass) {
+      students.forEach(s => dataManager.addStudentToClass(selectedClass.id, s));
+      // Refresh selected class data
+      const updatedClass = dataManager.getClasses().find(c => c.id === selectedClass.id);
+      if (updatedClass) setSelectedClass(updatedClass);
+      setForceUpdate(prev => prev + 1);
     }
   };
 
-  const handleAddStudentsToClass = (newStudents: Student[]) => {
-    if (!selectedClass) return;
-
-    const updatedClass = {
-      ...selectedClass,
-      students: [...selectedClass.students, ...newStudents],
-      studentCount: selectedClass.studentCount + newStudents.length
-    };
-
-    dataManager.updateClass(updatedClass);
-    setClasses(dataManager.getClasses());
-    setSelectedClass(updatedClass);
+  const handleRemoveStudent = (studentId: number) => {
+    if (selectedClass) {
+      dataManager.removeStudentFromClass(selectedClass.id, studentId);
+      // Refresh selected class data
+      const updatedClass = dataManager.getClasses().find(c => c.id === selectedClass.id);
+      if (updatedClass) setSelectedClass(updatedClass);
+      setForceUpdate(prev => prev + 1);
+    }
   };
 
-  const handleRemoveStudentFromClass = (studentId: number) => {
-    if (!selectedClass) return;
-    
-    if (confirm('确定要将该学生移除出班级吗？')) {
-      const updatedClass = {
-        ...selectedClass,
-        students: selectedClass.students.filter(s => s.id !== studentId),
-        studentCount: selectedClass.studentCount - 1
-      };
-      
-      dataManager.updateClass(updatedClass);
-      setClasses(dataManager.getClasses());
-      setSelectedClass(updatedClass);
+  const handleDeleteClass = (id: number) => {
+    if (confirm('确定要删除这个班级吗？')) {
+      dataManager.deleteClass(id);
+      setView('list');
+      setForceUpdate(prev => prev + 1);
     }
   };
 
@@ -268,116 +262,67 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
         cls={selectedClass} 
         onBack={() => setView('list')}
         onDelete={handleDeleteClass}
-        onAddStudents={handleAddStudentsToClass}
-        onRemoveStudent={handleRemoveStudentFromClass}
+        onAddStudents={handleAddStudents}
+        onRemoveStudent={handleRemoveStudent}
       />
     );
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      {/* Header */}
-      <div className="bg-white px-4 py-3 border-b border-slate-100 sticky top-0 z-10 flex items-center justify-between">
-        <button onClick={onBack} className="p-1 -ml-1 text-slate-600 active:bg-slate-100 rounded-full">
-          <ChevronLeft size={24} />
-        </button>
-        <h1 className="font-bold text-lg text-slate-800">班级管理</h1>
-        <button onClick={() => setShowModal(true)} className="text-blue-600 font-medium text-sm flex items-center gap-1">
-          <Plus size={16} />
-          新建
+    <div className="bg-slate-50/50 min-h-screen flex flex-col">
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 flex items-center justify-between sticky top-0 z-10 shadow-sm transition-all duration-300">
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={onBack} 
+            className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          >
+            <ChevronLeft size={22} />
+          </button>
+          <h1 className="font-bold text-lg text-slate-800 tracking-tight">班级管理</h1>
+        </div>
+        <button className="flex items-center gap-1.5 text-white text-sm font-bold bg-blue-600 px-3 py-1.5 rounded-full shadow-md shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all">
+          <Plus size={16} strokeWidth={2.5} /> 新建班级
         </button>
       </div>
 
-      {/* Class List */}
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-4">
         {classes.map(cls => (
           <div 
             key={cls.id} 
             onClick={() => handleClassClick(cls)}
-            className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm relative group active:scale-[0.99] transition-transform cursor-pointer"
+            className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md active:scale-[0.99] transition-all duration-300 cursor-pointer group"
           >
-            <div className="flex justify-between items-start mb-2">
+            <div className="flex justify-between items-start mb-3">
               <div>
-                <h3 className="font-bold text-slate-800 text-lg">{cls.name}</h3>
-                <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded mt-1">{cls.grade}</span>
+                <h3 className="font-bold text-lg text-slate-800 mb-1 group-hover:text-blue-600 transition-colors">{cls.name}</h3>
+                <div className="flex items-center gap-2">
+                  <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-xs font-bold border border-blue-100">{cls.grade}</span>
+                  <span className="text-slate-400 text-xs flex items-center gap-1">
+                    <Users size={12} /> {cls.studentCount}人
+                  </span>
+                </div>
               </div>
-              <button className="text-slate-300 hover:text-slate-500 p-1">
-                <MoreHorizontal size={20} />
-              </button>
+              <div className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+                <ArrowRight size={20} />
+              </div>
             </div>
             
-            <div className="flex items-center gap-4 text-sm text-slate-500 mt-4">
-              <div className="flex items-center gap-1.5">
-                <Users size={16} className="text-slate-400" />
-                <span>{cls.teacher}</span>
-              </div>
-              <div className="w-px h-3 bg-slate-200"></div>
-              <div className="flex items-center gap-1.5">
-                <BookOpen size={16} className="text-slate-400" />
-                <span>{cls.studentCount}人</span>
-              </div>
+            <div className="pt-3 border-t border-slate-50 flex items-center justify-between text-sm">
+              <span className="text-slate-500 font-medium">班主任：{cls.teacher}</span>
+              <span className="text-slate-400 text-xs">ID: {cls.id}</span>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Add Class Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
-             <div className="p-4 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="font-bold text-lg text-slate-800">新建班级</h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600">
-                ✕
-              </button>
+        
+        {classes.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 shadow-inner">
+              <Users size={32} className="text-slate-300" />
             </div>
-            <div className="p-4 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">班级名称</label>
-                <input
-                  type="text"
-                  value={newClass.name}
-                  onChange={e => setNewClass({...newClass, name: e.target.value})}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
-                  placeholder="如：一年级1班"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">所属年级</label>
-                <select
-                  value={newClass.grade}
-                  onChange={e => setNewClass({...newClass, grade: e.target.value})}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors bg-white"
-                >
-                  <option>一年级</option>
-                  <option>二年级</option>
-                  <option>三年级</option>
-                  <option>四年级</option>
-                  <option>五年级</option>
-                  <option>六年级</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">带班老师</label>
-                <input
-                  type="text"
-                  value={newClass.teacher}
-                  onChange={e => setNewClass({...newClass, teacher: e.target.value})}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
-                  placeholder="请输入老师姓名"
-                />
-              </div>
-              <button
-                onClick={handleAddClass}
-                disabled={!newClass.name || !newClass.teacher}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold active:scale-[0.98] transition-transform disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-              >
-                创建班级
-              </button>
-            </div>
+            <p className="font-medium">暂无班级数据</p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

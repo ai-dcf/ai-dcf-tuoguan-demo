@@ -70,27 +70,27 @@ function App() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center h-16 pb-safe z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 flex justify-around items-center h-16 pb-safe z-50 shadow-lg">
         <button 
           onClick={() => setCurrentView('home')}
-          className={`flex flex-col items-center justify-center w-full h-full ${activeTab === 'home' ? 'text-blue-600' : 'text-slate-400'}`}
+          className={`flex flex-col items-center justify-center w-full h-full transition-all duration-200 active:scale-95 ${activeTab === 'home' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          <Home size={24} />
-          <span className="text-xs mt-1">首页</span>
+          <Home size={24} strokeWidth={activeTab === 'home' ? 2.5 : 2} />
+          <span className="text-[10px] font-medium mt-1">首页</span>
         </button>
         <button 
           onClick={() => setCurrentView('management')}
-          className={`flex flex-col items-center justify-center w-full h-full ${activeTab === 'management' ? 'text-blue-600' : 'text-slate-400'}`}
+          className={`flex flex-col items-center justify-center w-full h-full transition-all duration-200 active:scale-95 ${activeTab === 'management' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          <Briefcase size={24} />
-          <span className="text-xs mt-1">管理</span>
+          <Briefcase size={24} strokeWidth={activeTab === 'management' ? 2.5 : 2} />
+          <span className="text-[10px] font-medium mt-1">管理</span>
         </button>
         <button 
           onClick={() => setCurrentView('mine')}
-          className={`flex flex-col items-center justify-center w-full h-full ${activeTab === 'mine' ? 'text-blue-600' : 'text-slate-400'}`}
+          className={`flex flex-col items-center justify-center w-full h-full transition-all duration-200 active:scale-95 ${activeTab === 'mine' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          <User size={24} />
-          <span className="text-xs mt-1">我的</span>
+          <User size={24} strokeWidth={activeTab === 'mine' ? 2.5 : 2} />
+          <span className="text-[10px] font-medium mt-1">我的</span>
         </button>
       </div>
     </div>

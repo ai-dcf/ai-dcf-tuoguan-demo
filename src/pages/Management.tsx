@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Users, School, BookOpen, Utensils, Bell, ChevronRight, Briefcase, GraduationCap } from 'lucide-react';
+import { Settings, Users, School, BookOpen, Utensils, Bell, ChevronRight, Briefcase, GraduationCap, ArrowRight } from 'lucide-react';
 import InstitutionInfo from './management/InstitutionInfo';
 import SchoolLibrary from './management/SchoolLibrary';
 import ClassManagement from './management/ClassManagement';
@@ -26,89 +26,112 @@ const ManagementPage: React.FC = () => {
   if (currentView === 'institution-notification') return <InstitutionNotification onBack={() => setCurrentView('menu')} />;
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-20">
+    <div className="bg-[#F5F7FA] min-h-screen pb-24">
       {/* Header */}
-      <div className="bg-white px-4 py-3 border-b border-slate-100 sticky top-0 z-10">
-        <h1 className="font-bold text-lg text-slate-800">管理中心</h1>
-      </div>
-
-      {/* Basic Settings */}
-      <div className="mt-4 px-4">
-        <h2 className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">基础设置</h2>
-        <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100">
-          <MenuItem 
-            icon={<School className="text-blue-500" />} 
-            label="机构信息" 
-            onClick={() => setCurrentView('institution')}
-          />
-          <MenuItem 
-            icon={<Settings className="text-slate-500" />} 
-            label="周边学校库" 
-            border={false} 
-            onClick={() => setCurrentView('school-library')}
-          />
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-100/50 sticky top-0 z-10 flex items-center justify-between">
+        <h1 className="font-bold text-xl text-slate-800 tracking-tight">管理中心</h1>
+        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+            <Settings size={18} className="text-slate-500" />
         </div>
       </div>
 
-      {/* Academic Management */}
-      <div className="mt-6 px-4">
-        <h2 className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">教务管理</h2>
-        <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100">
-          <MenuItem 
-            icon={<Briefcase className="text-indigo-500" />} 
-            label="托管类型维护" 
-            onClick={() => setCurrentView('custody-type')}
-          />
-          <MenuItem 
-            icon={<Users className="text-indigo-500" />} 
-            label="班级管理" 
-            onClick={() => setCurrentView('class-management')}
-          />
-          <MenuItem 
-            icon={<BookOpen className="text-indigo-500" />} 
-            label="教学设置" 
-            subLabel="学科/作业类型/表现标签" 
-            border={false} 
-            onClick={() => setCurrentView('teaching-settings')}
-          />
-        </div>
-      </div>
+      <div className="p-4 space-y-6">
+        {/* Basic Settings */}
+        <section>
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">基础设置</h2>
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+            <MenuItem 
+              icon={<School size={20} />} 
+              iconColor="text-blue-500"
+              iconBg="bg-blue-50"
+              label="机构信息" 
+              onClick={() => setCurrentView('institution')}
+            />
+            <MenuItem 
+              icon={<Settings size={20} />} 
+              iconColor="text-slate-500"
+              iconBg="bg-slate-50"
+              label="周边学校库" 
+              border={false} 
+              onClick={() => setCurrentView('school-library')}
+            />
+          </div>
+        </section>
 
-      {/* Personnel Management */}
-      <div className="mt-6 px-4">
-        <h2 className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">人员管理</h2>
-        <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100">
-          <MenuItem 
-            icon={<Users className="text-green-500" />} 
-            label="教师管理" 
-            onClick={() => setCurrentView('teacher-management')}
-          />
-          <MenuItem 
-            icon={<GraduationCap className="text-green-500" />} 
-            label="学生总库" 
-            subLabel="唯一新增入口" 
-            border={false} 
-            onClick={() => setCurrentView('student-database')}
-          />
-        </div>
-      </div>
+        {/* Academic Management */}
+        <section>
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">教务管理</h2>
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+            <MenuItem 
+              icon={<Briefcase size={20} />} 
+              iconColor="text-indigo-500"
+              iconBg="bg-indigo-50"
+              label="托管类型维护" 
+              onClick={() => setCurrentView('custody-type')}
+            />
+            <MenuItem 
+              icon={<Users size={20} />} 
+              iconColor="text-indigo-500"
+              iconBg="bg-indigo-50"
+              label="班级管理" 
+              onClick={() => setCurrentView('class-management')}
+            />
+            <MenuItem 
+              icon={<BookOpen size={20} />} 
+              iconColor="text-indigo-500"
+              iconBg="bg-indigo-50"
+              label="教学设置" 
+              subLabel="学科/作业类型/表现标签" 
+              border={false} 
+              onClick={() => setCurrentView('teaching-settings')}
+            />
+          </div>
+        </section>
 
-      {/* Operations Tools */}
-      <div className="mt-6 px-4">
-        <h2 className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">运营工具</h2>
-        <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100">
-          <MenuItem 
-            icon={<Utensils className="text-orange-500" />} 
-            label="食谱发布" 
-            onClick={() => setCurrentView('recipe-publishing')}
-          />
-          <MenuItem 
-            icon={<Bell className="text-orange-500" />} 
-            label="机构通知" 
-            border={false} 
-            onClick={() => setCurrentView('institution-notification')}
-          />
-        </div>
+        {/* Personnel Management */}
+        <section>
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">人员管理</h2>
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+            <MenuItem 
+              icon={<Users size={20} />} 
+              iconColor="text-green-500"
+              iconBg="bg-green-50"
+              label="教师管理" 
+              onClick={() => setCurrentView('teacher-management')}
+            />
+            <MenuItem 
+              icon={<GraduationCap size={20} />} 
+              iconColor="text-green-500"
+              iconBg="bg-green-50"
+              label="学生总库" 
+              subLabel="唯一新增入口" 
+              border={false} 
+              onClick={() => setCurrentView('student-database')}
+            />
+          </div>
+        </section>
+
+        {/* Operations Tools */}
+        <section>
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">运营工具</h2>
+          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+            <MenuItem 
+              icon={<Utensils size={20} />} 
+              iconColor="text-orange-500"
+              iconBg="bg-orange-50"
+              label="食谱发布" 
+              onClick={() => setCurrentView('recipe-publishing')}
+            />
+            <MenuItem 
+              icon={<Bell size={20} />} 
+              iconColor="text-orange-500"
+              iconBg="bg-orange-50"
+              label="机构通知" 
+              border={false} 
+              onClick={() => setCurrentView('institution-notification')}
+            />
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -116,28 +139,42 @@ const ManagementPage: React.FC = () => {
 
 interface MenuItemProps {
   icon: React.ReactNode;
+  iconColor?: string;
+  iconBg?: string;
   label: string;
   subLabel?: string;
   border?: boolean;
   onClick?: () => void;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ icon, label, subLabel, border = true, onClick }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ 
+  icon, 
+  iconColor = "text-slate-500", 
+  iconBg = "bg-slate-50", 
+  label, 
+  subLabel, 
+  border = true, 
+  onClick 
+}) => {
   return (
     <div 
       onClick={onClick}
-      className={`flex items-center justify-between p-4 active:bg-slate-50 transition-colors cursor-pointer ${border ? 'border-b border-slate-50' : ''}`}
+      className="group relative flex items-center justify-between p-4 cursor-pointer active:bg-slate-50 transition-all hover:bg-slate-50/50"
     >
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
-          {React.cloneElement(icon as React.ReactElement, { size: 18 })}
+      <div className="flex items-center gap-4">
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${iconBg} ${iconColor}`}>
+          {icon}
         </div>
         <div>
-          <div className="text-sm font-medium text-slate-800">{label}</div>
-          {subLabel && <div className="text-xs text-slate-400 mt-0.5">{subLabel}</div>}
+          <div className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{label}</div>
+          {subLabel && <div className="text-[10px] text-slate-400 mt-0.5 font-medium">{subLabel}</div>}
         </div>
       </div>
-      <ChevronRight size={16} className="text-slate-300" />
+      <div className="flex items-center text-slate-300 group-hover:text-blue-400 transition-colors">
+        <ArrowRight size={18} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
+        <ChevronRight size={18} className="group-hover:opacity-0 transition-opacity absolute right-4" />
+      </div>
+      {border && <div className="absolute bottom-0 left-16 right-0 h-px bg-slate-50" />}
     </div>
   );
 };
