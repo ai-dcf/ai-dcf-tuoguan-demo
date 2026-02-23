@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Download, ChevronDown, CheckCircle, XCircle, MoreHorizontal, ChevronLeft, Plus, User, Sparkles } from 'lucide-react';
+import { Search, Filter, Download, CheckCircle, XCircle, MoreHorizontal, ChevronLeft, Plus, User, Sparkles } from 'lucide-react';
 import MistakeEntry from '../components/MistakeEntry';
 import { dataManager } from '../utils/dataManager';
 import type { Student, Mistake } from '../utils/dataManager';

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronLeft, Check, X, Clock, Calendar, User, FileText } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronLeft, Check, X, Clock, Calendar, FileText } from 'lucide-react';
 
 interface LeaveRequest {
   id: string;

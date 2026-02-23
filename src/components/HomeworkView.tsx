@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, Edit2, Calendar, ChevronDown, Send, X, Clock, FileText, CheckCircle } from 'lucide-react';
+import { Plus, Trash2, Edit2, Calendar, ChevronDown, Send, Clock, FileText, CheckCircle } from 'lucide-react';
 
 const HomeworkView = () => {
   const [view, setView] = useState<'list' | 'create'>('list');

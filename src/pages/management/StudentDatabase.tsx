@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Search, Filter, MoreHorizontal, Phone, User, Calendar, Edit, Trash2, X, Check, ArrowUp } from 'lucide-react';
+import { ChevronLeft, Plus, Search, Filter, Phone, User, Calendar } from 'lucide-react';
 import { dataManager } from '../../utils/dataManager';
 import type { Student } from '../../utils/dataManager';
 

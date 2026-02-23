@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Users, Search, CheckCircle, Circle, Trash, MoreHorizontal, Calendar, ArrowRight, X, Edit3, GraduationCap, ArrowRightLeft, BookOpen } from 'lucide-react';
+import { ChevronLeft, Plus, Users, Search, CheckCircle, Circle, X, Edit3, GraduationCap, ArrowRightLeft, BookOpen } from 'lucide-react';
 import { dataManager } from '../../utils/dataManager';
 import type { ClassItem, Student } from '../../utils/dataManager';
 
@@ -278,12 +278,11 @@ const TransferStudentModal: React.FC<{
 const ClassDetailView: React.FC<{ 
   cls: ClassItem; 
   onBack: () => void;
-  onDelete: (id: number) => void;
   onAddStudents: (students: Student[]) => void;
   onRemoveStudent: (studentId: number) => void;
   onUpdateStudent: (student: Student) => void;
   onTransferStudent: (studentId: number, targetClassId: number) => void;
-}> = ({ cls, onBack, onDelete, onAddStudents, onRemoveStudent, onUpdateStudent, onTransferStudent }) => {
+}> = ({ cls, onBack, onAddStudents, onRemoveStudent, onUpdateStudent, onTransferStudent }) => {
   const [showSelector, setShowSelector] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [transferringStudent, setTransferringStudent] = useState<Student | null>(null);
@@ -496,7 +495,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
     grade: string, 
     mainTeacher: string, 
     assistantTeacher: string,
-    custodyType: 'lunch' | 'dinner'
+    custodyType: 'lunch' | 'dinner' | 'both'
   }>({ 
     name: '', grade: '', mainTeacher: '', assistantTeacher: '', custodyType: 'lunch' 
   });
@@ -654,7 +653,6 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
       <ClassDetailView 
         cls={selectedClass} 
         onBack={() => setView('list')}
-        onDelete={handleCloseClass}
         onAddStudents={handleAddStudents}
         onRemoveStudent={handleRemoveStudent}
         onUpdateStudent={handleUpdateStudent}

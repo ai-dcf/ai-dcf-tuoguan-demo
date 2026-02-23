@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Phone, MoreHorizontal, UserCog, ShieldCheck, Trash, BookOpen, X } from 'lucide-react';
+import { ChevronLeft, Plus, Phone, MoreHorizontal, UserCog, Trash, BookOpen, X } from 'lucide-react';
 
 interface TeacherManagementProps {
   onBack: () => void;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Camera, Star, AlertCircle, Save, X, Image as ImageIcon, Search, ChevronRight } from 'lucide-react';
+import { Check, Camera, Star, AlertCircle, Save, ChevronRight } from 'lucide-react';
 import MistakeEntry from './MistakeEntry';
 
 const ReviewView = () => {

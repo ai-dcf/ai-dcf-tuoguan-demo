@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Check, LogOut, CalendarX, Plus } from 'lucide-react';
+import { Check, LogOut, CalendarX, Plus } from 'lucide-react';
 
 const AttendanceView = () => {
   const [students, setStudents] = useState([

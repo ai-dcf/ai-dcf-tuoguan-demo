@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Clock, ChevronRight as ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, XCircle, Clock, ChevronRight as ArrowRight } from 'lucide-react';
 
 // Mock Data
 const HISTORY_DATA = [

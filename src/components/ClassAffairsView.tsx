@@ -1,4 +1,4 @@
-import { User, Settings, Phone, UserMinus, ArrowRightLeft, AlertCircle, ChevronRight } from 'lucide-react';
+import { Settings, UserMinus, ArrowRightLeft, AlertCircle } from 'lucide-react';
 
 const ClassAffairsView = () => {
   const students = Array(18).fill(null).map((_, i) => ({

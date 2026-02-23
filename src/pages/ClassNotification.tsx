@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, Plus, Bell, Clock, Eye, Send } from 'lucide-react';
 
 interface Notification {

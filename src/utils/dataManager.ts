@@ -184,6 +184,25 @@ class DataManager {
   deleteClass(id: number) {
     this.classes = this.classes.filter(c => c.id !== id);
   }
+
+  addStudentToClass(classId: number, student: Student) {
+    const cls = this.classes.find(c => c.id === classId);
+    if (cls) {
+      // Check if student is already in class
+      if (!cls.students.find(s => s.id === student.id)) {
+        cls.students.push(student);
+        cls.studentCount = cls.students.length;
+      }
+    }
+  }
+
+  removeStudentFromClass(classId: number, studentId: number) {
+    const cls = this.classes.find(c => c.id === classId);
+    if (cls) {
+      cls.students = cls.students.filter(s => s.id !== studentId);
+      cls.studentCount = cls.students.length;
+    }
+  }
 }
 
 export const dataManager = new DataManager();
