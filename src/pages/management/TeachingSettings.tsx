@@ -43,18 +43,21 @@ const TeachingSettings: React.FC<TeachingSettingsProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
+    <div className="bg-slate-50/50 min-h-screen flex flex-col">
       {/* Header */}
-      <div className="bg-white px-4 py-3 border-b border-slate-100 sticky top-0 z-10 flex items-center justify-between">
-        <button onClick={onBack} className="p-1 -ml-1 text-slate-600 active:bg-slate-100 rounded-full">
-          <ChevronLeft size={24} />
+      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 flex items-center justify-between shadow-sm transition-all duration-300">
+        <button 
+          onClick={onBack} 
+          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+        >
+          <ChevronLeft size={22} />
         </button>
-        <h1 className="font-bold text-lg text-slate-800">教学设置</h1>
+        <h1 className="font-bold text-lg text-slate-800 tracking-tight">教学设置</h1>
         <div className="w-8"></div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white px-4 pt-2 border-b border-slate-100 flex gap-6 overflow-x-auto no-scrollbar">
+      <div className="bg-white/80 backdrop-blur-md px-4 pt-2 border-b border-slate-200/60 flex gap-6 overflow-x-auto no-scrollbar sticky top-[53px] z-10">
         {[
           { id: 'subjects', label: '学科设置' },
           { id: 'homework', label: '作业类型' },
@@ -63,13 +66,13 @@ const TeachingSettings: React.FC<TeachingSettingsProps> = ({ onBack }) => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`pb-3 text-sm font-medium whitespace-nowrap transition-colors relative ${
-              activeTab === tab.id ? 'text-blue-600' : 'text-slate-500'
+            className={`pb-3 text-sm font-bold whitespace-nowrap transition-all relative ${
+              activeTab === tab.id ? 'text-blue-600 scale-105' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             {tab.label}
             {activeTab === tab.id && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-blue-600 rounded-full" />
             )}
           </button>
         ))}
@@ -77,15 +80,15 @@ const TeachingSettings: React.FC<TeachingSettingsProps> = ({ onBack }) => {
 
       {/* Content */}
       <div className="p-4 flex-1">
-        <div className="bg-white rounded-xl border border-slate-100 p-4 min-h-[300px]">
+        <div className="bg-white rounded-2xl border border-slate-100 p-5 min-h-[300px] shadow-sm">
           {/* Add Input */}
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2.5 mb-5">
             <input
               type="text"
               value={newItem}
               onChange={e => setNewItem(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAdd()}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500"
+              className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-800 placeholder:text-slate-400"
               placeholder={`添加${
                 activeTab === 'subjects' ? '学科' : 
                 activeTab === 'homework' ? '作业类型' : '表现标签'
@@ -94,46 +97,54 @@ const TeachingSettings: React.FC<TeachingSettingsProps> = ({ onBack }) => {
             <button 
               onClick={handleAdd}
               disabled={!newItem.trim()}
-              className="bg-blue-600 text-white px-4 rounded-lg font-medium text-sm disabled:opacity-50 active:scale-95 transition-transform"
+              className="bg-blue-600 text-white px-5 rounded-xl font-bold text-sm shadow-md shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50 disabled:shadow-none whitespace-nowrap"
             >
               添加
             </button>
           </div>
 
           {/* List */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {getList().map((item, index) => (
               <div 
                 key={index}
-                className={`group flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm transition-all ${
+                className={`group flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-medium transition-all hover:shadow-sm ${
                   activeTab === 'tags' 
                     ? 'bg-orange-50 border-orange-100 text-orange-700' 
-                    : 'bg-slate-50 border-slate-100 text-slate-700'
+                    : 'bg-slate-50 border-slate-200 text-slate-700'
                 }`}
               >
-                {activeTab === 'tags' && <Tag size={12} className="opacity-50" />}
+                {activeTab === 'tags' && <Tag size={14} className="opacity-60" />}
                 <span>{item}</span>
                 <button 
                   onClick={() => handleDelete(index)}
-                  className="w-4 h-4 rounded-full flex items-center justify-center text-slate-400 hover:bg-black/10 hover:text-slate-600 transition-colors"
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:bg-black/10 hover:text-slate-600 transition-colors"
                 >
-                  <X size={10} />
+                  <X size={12} />
                 </button>
               </div>
             ))}
             {getList().length === 0 && (
-              <div className="w-full text-center py-10 text-slate-400 text-sm">
-                暂无数据，请添加
+              <div className="w-full flex flex-col items-center justify-center py-12 text-slate-400">
+                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                  <Plus size={24} className="text-slate-300" />
+                </div>
+                <p className="text-sm font-medium">暂无数据，请添加</p>
               </div>
             )}
           </div>
         </div>
         
-        <div className="mt-4 text-xs text-slate-400 px-2 leading-relaxed">
-          提示：
-          <br />• 学科设置将用于作业发布和错题录入。
-          <br />• 作业类型用于区分不同形式的作业任务。
-          <br />• 表现标签用于每日点评时快速评价学生表现。
+        <div className="mt-6 bg-blue-50/50 rounded-xl p-4 border border-blue-100/50">
+          <h4 className="text-xs font-bold text-blue-700 mb-2 flex items-center gap-1.5">
+            <div className="w-1 h-3 bg-blue-500 rounded-full"></div>
+            功能说明
+          </h4>
+          <div className="text-xs text-slate-500 leading-relaxed space-y-1.5 pl-2.5 border-l-2 border-slate-200 ml-0.5">
+            <p>• <span className="font-medium text-slate-700">学科设置</span>：用于作业发布和错题录入。</p>
+            <p>• <span className="font-medium text-slate-700">作业类型</span>：用于区分不同形式的作业任务。</p>
+            <p>• <span className="font-medium text-slate-700">表现标签</span>：用于每日点评时快速评价学生表现。</p>
+          </div>
         </div>
       </div>
     </div>

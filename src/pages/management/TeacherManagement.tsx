@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Phone, MoreHorizontal, UserCog, ShieldCheck, Trash, BookOpen } from 'lucide-react';
+import { ChevronLeft, Plus, Phone, MoreHorizontal, UserCog, ShieldCheck, Trash, BookOpen, X } from 'lucide-react';
 
 interface TeacherManagementProps {
   onBack: () => void;
@@ -24,69 +24,81 @@ const getRoleLabel = (role: Teacher['role']) => {
 };
 
 const getRoleColor = (role: Teacher['role']) => {
-  switch(role) {
-    case 'admin': return 'bg-purple-50 text-purple-600';
-    case 'teacher': return 'bg-blue-50 text-blue-600';
-    case 'assistant': return 'bg-orange-50 text-orange-600';
-    default: return 'bg-slate-50 text-slate-600';
-  }
-};
+    switch(role) {
+      case 'admin': return 'bg-purple-50 text-purple-600 border border-purple-100';
+      case 'teacher': return 'bg-blue-50 text-blue-600 border border-blue-100';
+      case 'assistant': return 'bg-orange-50 text-orange-600 border border-orange-100';
+      default: return 'bg-slate-50 text-slate-600 border border-slate-100';
+    }
+  };
 
-const TeacherDetailView: React.FC<{
-  teacher: Teacher;
-  onBack: () => void;
-  onDelete: (id: number) => void;
-}> = ({ teacher, onBack, onDelete }) => {
-  return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      <div className="bg-white px-4 py-3 border-b border-slate-100 flex items-center justify-between sticky top-0 z-10">
-        <button onClick={onBack} className="text-slate-600">
-          <ChevronLeft size={24} />
-        </button>
-        <h1 className="font-bold text-lg text-slate-800">教师详情</h1>
-        <button onClick={() => onDelete(teacher.id)} className="text-red-500">
-          <Trash size={20} />
-        </button>
-      </div>
-
-      <div className="p-4 space-y-4">
-        <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col items-center">
-          <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 font-bold text-3xl mb-3">
-            {teacher.name[0]}
-          </div>
-          <h2 className="text-xl font-bold text-slate-800">{teacher.name}</h2>
-          <div className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${getRoleColor(teacher.role)}`}>
-            {getRoleLabel(teacher.role)}
-          </div>
-          <div className="flex items-center gap-2 text-slate-500 mt-4">
-            <Phone size={16} />
-            <span>{teacher.phone}</span>
-          </div>
+  const TeacherDetailView: React.FC<{
+    teacher: Teacher;
+    onBack: () => void;
+    onDelete: (id: number) => void;
+  }> = ({ teacher, onBack, onDelete }) => {
+    return (
+      <div className="bg-slate-50/50 min-h-screen flex flex-col">
+        <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 flex items-center justify-between sticky top-0 z-10 shadow-sm transition-all duration-300">
+          <button 
+            onClick={onBack} 
+            className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          >
+            <ChevronLeft size={22} />
+          </button>
+          <h1 className="font-bold text-lg text-slate-800 tracking-tight">教师详情</h1>
+          <button 
+            onClick={() => onDelete(teacher.id)} 
+            className="p-2 -mr-2 text-red-500 hover:bg-red-50 active:scale-95 rounded-full transition-all"
+          >
+            <Trash size={20} />
+          </button>
         </div>
 
-        <div>
-          <h3 className="font-bold text-slate-800 mb-3 px-1">负责班级</h3>
-          <div className="space-y-2">
-            {teacher.classes && teacher.classes.length > 0 ? (
-              teacher.classes.map((cls, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-slate-100 flex items-center gap-3">
-                  <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
-                    <BookOpen size={20} />
+        <div className="p-4 space-y-4">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold text-3xl mb-4 shadow-inner">
+              {teacher.name[0]}
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 tracking-tight">{teacher.name}</h2>
+            <div className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${getRoleColor(teacher.role)}`}>
+              {getRoleLabel(teacher.role)}
+            </div>
+            <div className="flex items-center gap-2 text-slate-500 mt-5 bg-slate-50 px-4 py-2 rounded-xl">
+              <Phone size={16} />
+              <span className="font-medium font-mono">{teacher.phone}</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-slate-800 mb-3 px-1 flex items-center gap-2">
+              <div className="w-1 h-4 bg-blue-600 rounded-full"></div>
+              负责班级
+            </h3>
+            <div className="space-y-2.5">
+              {teacher.classes && teacher.classes.length > 0 ? (
+                teacher.classes.map((cls, index) => (
+                  <div key={index} className="bg-white p-4 rounded-xl border border-slate-100 flex items-center gap-3 shadow-sm">
+                    <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600">
+                      <BookOpen size={20} />
+                    </div>
+                    <span className="font-bold text-slate-700">{cls}</span>
                   </div>
-                  <span className="font-medium text-slate-700">{cls}</span>
+                ))
+              ) : (
+                <div className="text-center py-12 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200">
+                  <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <BookOpen size={20} className="text-slate-300" />
+                  </div>
+                  <p className="text-sm">暂未分配班级</p>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-slate-400 bg-white rounded-xl border border-dashed border-slate-200">
-                暂未分配班级
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 const TeacherManagement: React.FC<TeacherManagementProps> = ({ onBack }) => {
   const [view, setView] = useState<'list' | 'detail'>('list');
