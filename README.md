@@ -43,6 +43,27 @@ npm run build
 ```
 构建产物位于 `dist/` 目录，可直接部署到任何静态服务器或发送给客户体验。
 
+## ☁️ 部署指南 (Vercel)
+
+本项目支持一键部署至 [Vercel](https://vercel.com)。
+
+### 1. 基础部署
+1. 将代码提交至 GitHub/GitLab。
+2. 登录 Vercel，点击 **Add New...** -> **Project**。
+3. 导入本项目仓库，框架预设选择 **Vite** (通常会自动识别)。
+4. 点击 **Deploy** 等待构建完成。
+
+### 2. 国内访问配置 (重要) 🇨🇳
+由于 `*.vercel.app` 默认域名在国内访问不稳定，**强烈建议绑定自定义域名**。
+
+**配置步骤：**
+1.  进入 Vercel 项目 **Settings** -> **Domains**。
+2.  添加您的二级域名 (例如: `tuoguan-demo.gorun996.com`)。
+3.  登录域名服务商 (阿里云/腾讯云等) 控制台，添加 **CNAME** 记录：
+    *   **主机记录 (Name)**: `tuoguan-demo` (根据您的前缀)
+    *   **记录值 (Value)**: `cname.vercel-dns.com`
+4.  等待生效后，即可通过自定义域名流畅访问。
+
 ## 🛠️ 技术栈
 *   **React 19 + TypeScript**: 现代前端框架
 *   **Tailwind CSS v4**: 高性能样式引擎 (已配置 Vite 插件)
