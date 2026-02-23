@@ -49,18 +49,25 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
             <button className="text-blue-600 font-medium text-sm">编辑</button>
          </div>
          <div className="p-4">
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col items-center mb-4">
-               <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 text-3xl font-bold shadow-inner mb-4 ring-4 ring-white">
-                  {selectedStudent.name[0]}
-               </div>
-               <h2 className="text-2xl font-bold text-slate-800 mb-1">{selectedStudent.name}</h2>
-               <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-slate-100 rounded-full text-xs font-bold text-slate-600">{selectedStudent.grade}</span>
-                  <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-bold border border-green-100">
-                    {selectedStudent.status === 'active' ? '在读' : '毕业'}
-                  </span>
-               </div>
-            </div>
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col items-center mb-4 relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none"></div>
+             <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 text-3xl font-bold shadow-inner mb-4 ring-4 ring-white relative z-10">
+                {selectedStudent.name[0]}
+             </div>
+             <h2 className="text-2xl font-bold text-slate-800 mb-1 relative z-10">{selectedStudent.name}</h2>
+             <div className="flex items-center gap-2 mb-4 relative z-10">
+                <span className="px-3 py-1 bg-slate-100 rounded-full text-xs font-bold text-slate-600 border border-slate-200">{selectedStudent.grade}</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                  selectedStudent.status === 'active' 
+                    ? 'bg-green-50 text-green-600 border-green-100' 
+                    : selectedStudent.status === 'graduated' 
+                      ? 'bg-slate-100 text-slate-500 border-slate-200' 
+                      : 'bg-orange-50 text-orange-600 border-orange-100'
+                }`}>
+                  {selectedStudent.status === 'active' ? '在读' : selectedStudent.status === 'graduated' ? '毕业' : '休学'}
+                </span>
+             </div>
+          </div>
             
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-4">
                 <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wider text-slate-400">基本信息</h3>
@@ -112,24 +119,26 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
         </div>
         
         {/* Search & Filter */}
-        <div className="flex gap-2">
+        <div className="flex gap-3 px-1 pb-1">
           <div className="flex-1 relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
+            </div>
             <input 
               type="text" 
               placeholder="搜索姓名/手机号" 
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 bg-slate-100 border-transparent border-2 focus:border-blue-500/20 focus:bg-white rounded-xl text-sm focus:outline-none transition-all font-medium"
+              className="w-full pl-9 pr-3 py-2.5 bg-slate-100/80 border-transparent border focus:border-blue-500/50 focus:bg-white rounded-2xl text-sm focus:outline-none transition-all font-medium shadow-sm focus:shadow-md focus:shadow-blue-500/10"
             />
           </div>
           <div className="relative">
             <select 
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as any)}
-              className="h-full px-3 pl-3 pr-8 bg-slate-100 border-transparent border-2 focus:border-blue-500/20 focus:bg-white rounded-xl text-sm font-bold text-slate-600 focus:outline-none appearance-none transition-all"
+              className="h-full pl-3 pr-8 bg-slate-100/80 border-transparent border focus:border-blue-500/50 focus:bg-white rounded-2xl text-sm font-bold text-slate-600 focus:outline-none appearance-none transition-all shadow-sm focus:shadow-md focus:shadow-blue-500/10"
             >
-              <option value="all">全部</option>
+              <option value="all">全部状态</option>
               <option value="active">在读</option>
               <option value="graduated">毕业</option>
             </select>
@@ -140,13 +149,14 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
 
       {/* Student List */}
       <div className="p-4 space-y-3 flex-1 overflow-y-auto pb-20">
-        {filteredStudents.map(student => (
+        {filteredStudents.map((student, index) => (
           <div 
             key={student.id} 
             onClick={() => handleStudentClick(student)}
-            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 active:scale-[0.99] hover:shadow-md transition-all duration-300 cursor-pointer group"
+            className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 active:scale-[0.98] hover:shadow-md transition-all duration-300 cursor-pointer group animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-inner ring-2 ring-white transition-transform group-hover:scale-105 ${
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-inner ring-2 ring-white transition-transform group-hover:scale-110 duration-300 ${
                 student.status === 'active' 
                     ? 'bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600'
                     : 'bg-slate-100 text-slate-400'
@@ -154,7 +164,7 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
               {student.name[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-start mb-1">
+              <div className="flex justify-between items-start mb-1.5">
                 <h3 className="font-bold text-slate-800 truncate text-base group-hover:text-blue-600 transition-colors">{student.name}</h3>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${
                   student.status === 'active' ? 'bg-green-50 text-green-600 border-green-100' : 
@@ -164,16 +174,16 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
                 </span>
               </div>
               <div className="text-xs text-slate-500 flex items-center gap-3">
-                <span className="bg-slate-50 px-2 py-0.5 rounded-md font-medium text-slate-600">{student.grade}</span>
+                <span className="bg-slate-50 px-2 py-0.5 rounded-md font-medium text-slate-600 border border-slate-100">{student.grade}</span>
                 <span className="flex items-center gap-1 text-slate-400">
                   <User size={12} />
                   {student.parent}
                 </span>
               </div>
             </div>
-            <div className="flex items-center" onClick={e => e.stopPropagation()}>
-               <a href={`tel:${student.phone}`} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-green-500 hover:bg-green-50 active:scale-90 rounded-full transition-all">
-                <Phone size={20} />
+            <div className="flex items-center pl-2 border-l border-slate-50" onClick={e => e.stopPropagation()}>
+               <a href={`tel:${student.phone}`} className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-green-600 hover:bg-green-50 active:scale-90 rounded-full transition-all">
+                <Phone size={18} />
               </a>
             </div>
           </div>
@@ -181,10 +191,13 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
         
         {filteredStudents.length === 0 && (
           <div className="text-center py-20 text-slate-400">
-            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-slate-100 animate-pulse-slow">
+              <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center">
                 <Search size={32} className="text-slate-300" />
+              </div>
             </div>
-            <p className="font-medium">未找到相关学生</p>
+            <p className="font-medium text-slate-500">未找到相关学生</p>
+            <p className="text-xs text-slate-400 mt-1">请尝试更换搜索关键词或筛选条件</p>
           </div>
         )}
       </div>
@@ -226,15 +239,15 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
 
       <div className="p-4 space-y-4 overflow-y-auto flex-1 pb-10">
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-5">
-          <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-2">
+          <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-3 flex items-center gap-2">
             <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
             基本信息
           </h3>
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">学生姓名 <span className="text-red-500">*</span></label>
+            <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">学生姓名 <span className="text-red-500">*</span></label>
             <input 
               type="text" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal"
               placeholder="请输入姓名"
               value={formData.name}
               onChange={e => setFormData({...formData, name: e.target.value})}
@@ -242,10 +255,10 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
           </div>
           <div className="grid grid-cols-2 gap-4">
              <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">年级</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">年级</label>
               <div className="relative">
                 <select 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none transition-all"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none transition-all"
                     value={formData.grade}
                     onChange={e => setFormData({...formData, grade: e.target.value})}
                 >
@@ -257,10 +270,10 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
               </div>
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">班级</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">班级</label>
               <input 
                 type="text" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal"
                 placeholder="例如: 1班"
                 value={formData.class}
                 onChange={e => setFormData({...formData, class: e.target.value})}
@@ -269,11 +282,11 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
           </div>
           
            <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">入学日期</label>
+            <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">入学日期</label>
             <div className="relative">
                 <input 
                 type="date" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 value={formData.enrollDate}
                 onChange={e => setFormData({...formData, enrollDate: e.target.value})}
                 />
@@ -283,26 +296,26 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
         </div>
 
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 space-y-5">
-           <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-2">
+           <h3 className="font-bold text-slate-800 border-b border-slate-50 pb-3 flex items-center gap-2">
             <div className="w-1 h-4 bg-green-500 rounded-full"></div>
             家庭信息
           </h3>
           <div className="grid grid-cols-2 gap-4">
              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">家长姓名</label>
+                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">家长姓名</label>
                 <input 
                 type="text" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal"
                 placeholder="请输入"
                 value={formData.parent}
                 onChange={e => setFormData({...formData, parent: e.target.value})}
                 />
              </div>
              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">联系电话 <span className="text-red-500">*</span></label>
+                <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">联系电话 <span className="text-red-500">*</span></label>
                 <input 
                 type="tel" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal"
                 placeholder="请输入"
                 value={formData.phone}
                 onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -310,20 +323,20 @@ const AddStudentForm: React.FC<{ onBack: () => void, onSave: (s: Omit<Student, '
              </div>
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">家庭住址</label>
+            <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">家庭住址</label>
             <input 
               type="text" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:font-normal"
               placeholder="请输入详细地址"
               value={formData.address}
               onChange={e => setFormData({...formData, address: e.target.value})}
             />
           </div>
            <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">备注信息</label>
+            <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">备注信息</label>
             <textarea 
               rows={3}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none placeholder:font-normal"
               placeholder="请输入备注..."
               value={formData.notes}
               onChange={e => setFormData({...formData, notes: e.target.value})}

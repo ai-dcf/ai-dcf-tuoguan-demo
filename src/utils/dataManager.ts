@@ -3,6 +3,7 @@ export interface Student {
   name: string;
   grade: string;
   class: string;
+  school?: string;
   parent: string;
   phone: string;
   status: 'active' | 'graduated' | 'suspended';
@@ -15,9 +16,12 @@ export interface ClassItem {
   id: number;
   name: string;
   grade: string;
-  teacher: string;
+  mainTeacher: string;
+  assistantTeacher?: string;
   studentCount: number;
   students: Student[];
+  custodyType?: 'lunch' | 'dinner' | 'both';
+  status?: 'active' | 'closed';
 }
 
 export interface Mistake {
@@ -61,6 +65,8 @@ class DataManager {
     { id: 4, studentId: 7, studentName: '沙悟净', subject: '语文', title: '古诗默写', date: '02-21', status: 'corrected', image: false },
   ];
 
+  private teachers: string[] = ['张老师', '李老师', '王老师', '赵老师', '孙老师'];
+
   private homeworks: Homework[] = [
     { id: 1, studentId: 5, studentName: '孙悟空', subject: '数学', title: '口算第3页', date: '02-23', status: 'pending' },
     { id: 2, studentId: 5, studentName: '孙悟空', subject: '英语', title: '抄写 Unit 1', date: '02-23', status: 'completed', score: 'A', comment: '字迹工整' },
@@ -73,27 +79,34 @@ class DataManager {
       id: 1, 
       name: '一年级1班', 
       grade: '一年级', 
-      teacher: '张老师', 
+      mainTeacher: '张老师',
+      assistantTeacher: '李老师',
       studentCount: 2,
+      custodyType: 'lunch',
+      status: 'active',
       students: [
-        { id: 5, name: '孙悟空', grade: '一年级', class: '1班', parent: '菩提老祖', phone: '13800138005', status: 'active' },
-        { id: 6, name: '猪八戒', grade: '一年级', class: '1班', parent: '高翠兰', phone: '13800138006', status: 'active' }
+        { id: 5, name: '孙悟空', grade: '一年级', class: '1班', school: '实验小学', parent: '菩提老祖', phone: '13800138005', status: 'active' },
+        { id: 6, name: '猪八戒', grade: '一年级', class: '1班', school: '实验小学', parent: '高翠兰', phone: '13800138006', status: 'active' }
       ]
     },
     { 
       id: 2, 
       name: '二年级2班', 
       grade: '二年级', 
-      teacher: '李老师', 
+      mainTeacher: '李老师',
       studentCount: 0,
+      custodyType: 'dinner',
+      status: 'active',
       students: []
     },
     { 
       id: 3, 
       name: '三年级1班', 
       grade: '三年级', 
-      teacher: '王老师', 
+      mainTeacher: '王老师',
       studentCount: 0,
+      custodyType: 'lunch',
+      status: 'active',
       students: []
     },
   ];
@@ -103,7 +116,15 @@ class DataManager {
   }
 
   getMistakes(): Mistake[] {
-    return this.mistakes;
+    return [...this.mistakes];
+  }
+
+  getTeachers(): string[] {
+    return [...this.teachers];
+  }
+
+  getHomeworks(): Homework[] {
+    return [...this.homeworks];
   }
 
   getMistakesByStudentId(studentId: number): Mistake[] {

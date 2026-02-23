@@ -26,20 +26,26 @@ const ManagementPage: React.FC = () => {
   if (currentView === 'institution-notification') return <InstitutionNotification onBack={() => setCurrentView('menu')} />;
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen pb-24">
+    <div className="bg-[#F5F7FA] min-h-screen pb-24 font-sans selection:bg-blue-100">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-100/50 sticky top-0 z-10 flex items-center justify-between">
-        <h1 className="font-bold text-xl text-slate-800 tracking-tight">管理中心</h1>
-        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
-            <Settings size={18} className="text-slate-500" />
+      <div className="bg-white/80 backdrop-blur-xl px-5 py-4 border-b border-slate-200/60 sticky top-0 z-20 flex items-center justify-between shadow-sm transition-all duration-300">
+        <h1 className="font-bold text-xl text-slate-800 tracking-tight flex items-center gap-2">
+          <span className="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+          管理中心
+        </h1>
+        <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 active:scale-95 transition-all cursor-pointer hover:bg-slate-50 hover:shadow-md">
+            <Settings size={20} className="text-slate-600" />
         </div>
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="p-4 space-y-6 max-w-2xl mx-auto">
         {/* Basic Settings */}
-        <section>
-          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">基础设置</h2>
-          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+        <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+            基础设置
+          </h2>
+          <div className="bg-white/70 backdrop-blur-lg rounded-[1.5rem] overflow-hidden shadow-sm border border-white/50 hover:shadow-md transition-shadow duration-300">
             <MenuItem 
               icon={<School size={20} />} 
               iconColor="text-blue-500"
@@ -59,9 +65,12 @@ const ManagementPage: React.FC = () => {
         </section>
 
         {/* Academic Management */}
-        <section>
-          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">教务管理</h2>
-          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+        <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+            教务管理
+          </h2>
+          <div className="bg-white/70 backdrop-blur-lg rounded-[1.5rem] overflow-hidden shadow-sm border border-white/50 hover:shadow-md transition-shadow duration-300">
             <MenuItem 
               icon={<Briefcase size={20} />} 
               iconColor="text-indigo-500"
@@ -89,9 +98,12 @@ const ManagementPage: React.FC = () => {
         </section>
 
         {/* Personnel Management */}
-        <section>
-          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">人员管理</h2>
-          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+        <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+            人员管理
+          </h2>
+          <div className="bg-white/70 backdrop-blur-lg rounded-[1.5rem] overflow-hidden shadow-sm border border-white/50 hover:shadow-md transition-shadow duration-300">
             <MenuItem 
               icon={<Users size={20} />} 
               iconColor="text-green-500"
@@ -112,9 +124,12 @@ const ManagementPage: React.FC = () => {
         </section>
 
         {/* Operations Tools */}
-        <section>
-          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">运营工具</h2>
-          <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+        <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+          <h2 className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
+            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+            运营工具
+          </h2>
+          <div className="bg-white/70 backdrop-blur-lg rounded-[1.5rem] overflow-hidden shadow-sm border border-white/50 hover:shadow-md transition-shadow duration-300">
             <MenuItem 
               icon={<Utensils size={20} />} 
               iconColor="text-orange-500"
@@ -159,22 +174,22 @@ const MenuItem: React.FC<MenuItemProps> = ({
   return (
     <div 
       onClick={onClick}
-      className="group relative flex items-center justify-between p-4 cursor-pointer active:bg-slate-50 transition-all hover:bg-slate-50/50"
+      className="group relative flex items-center justify-between p-4 cursor-pointer active:bg-slate-50/80 transition-all hover:bg-white/80"
     >
       <div className="flex items-center gap-4">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${iconBg} ${iconColor}`}>
+        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-sm ${iconBg} ${iconColor}`}>
           {icon}
         </div>
         <div>
-          <div className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{label}</div>
+          <div className="text-sm font-bold text-slate-700 group-hover:text-blue-600 transition-colors">{label}</div>
           {subLabel && <div className="text-[10px] text-slate-400 mt-0.5 font-medium">{subLabel}</div>}
         </div>
       </div>
       <div className="flex items-center text-slate-300 group-hover:text-blue-400 transition-colors">
-        <ArrowRight size={18} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300" />
-        <ChevronRight size={18} className="group-hover:opacity-0 transition-opacity absolute right-4" />
+        <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+        <ChevronRight size={18} className="group-hover:opacity-0 transition-all duration-300 absolute right-4" />
       </div>
-      {border && <div className="absolute bottom-0 left-16 right-0 h-px bg-slate-50" />}
+      {border && <div className="absolute bottom-0 left-16 right-0 h-px bg-slate-100/60" />}
     </div>
   );
 };

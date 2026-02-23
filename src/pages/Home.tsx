@@ -26,6 +26,10 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
     setShowClassSelector({ show: false, type: 'attendance' });
   };
 
+  const activeClasses = classes.filter(c => c.status !== 'closed');
+  const lunchClasses = activeClasses.filter(c => c.custodyType === 'lunch');
+  const dinnerClasses = activeClasses.filter(c => c.custodyType === 'dinner');
+
   return (
     <div className="bg-slate-50 min-h-screen relative pb-20">
       {/* Header */}
@@ -81,15 +85,24 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
             <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
             午托班级
           </h2>
-          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">1个班级</span>
+          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{lunchClasses.length}个班级</span>
         </div>
-        <ClassCard 
-          title="午托高年级" 
-          stats={{ uncheck: 2, present: 15, leave: 1 }}
-          pendingHomework={3}
-          onClick={() => onSelectClass('lunch-high')}
-          gradient="from-blue-50 to-white"
-        />
+        <div className="space-y-3">
+          {lunchClasses.length > 0 ? lunchClasses.map(cls => (
+            <ClassCard 
+              key={cls.id}
+              title={cls.name}
+              stats={{ uncheck: cls.studentCount, present: 0, leave: 0 }}
+              pendingHomework={3} // Mock data
+              onClick={() => onSelectClass(cls.id.toString())}
+              gradient="from-blue-50 to-white"
+            />
+          )) : (
+            <div className="text-sm text-slate-400 text-center py-4 bg-white rounded-2xl border border-dashed border-slate-200">
+              暂无午托班级
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Dinner Care Section */}
@@ -99,32 +112,32 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
             <span className="w-1 h-4 bg-indigo-500 rounded-full"></span>
             晚托班级
           </h2>
-          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">2个班级</span>
+          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{dinnerClasses.length}个班级</span>
         </div>
         <div className="space-y-3">
-          <ClassCard 
-            title="晚托一年级" 
-            stats={{ uncheck: 0, present: 18, leave: 0 }}
-            pendingHomework={0}
-            onClick={() => onSelectClass('dinner-1')}
-            gradient="from-indigo-50 to-white"
-          />
-          <ClassCard 
-            title="晚托二年级" 
-            stats={{ uncheck: 5, present: 12, leave: 1 }}
-            pendingHomework={1}
-            onClick={() => onSelectClass('dinner-2')}
-            gradient="from-indigo-50 to-white"
-          />
+          {dinnerClasses.length > 0 ? dinnerClasses.map(cls => (
+            <ClassCard 
+              key={cls.id}
+              title={cls.name}
+              stats={{ uncheck: cls.studentCount, present: 0, leave: 0 }}
+              pendingHomework={1} // Mock data
+              onClick={() => onSelectClass(cls.id.toString())}
+              gradient="from-indigo-50 to-white"
+            />
+          )) : (
+            <div className="text-sm text-slate-400 text-center py-4 bg-white rounded-2xl border border-dashed border-slate-200">
+              暂无晚托班级
+            </div>
+          )}
         </div>
       </div>
 
       {/* Class Selector Modal */}
       {showClassSelector.show && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowClassSelector({ ...showClassSelector, show: false })} />
           
-          <div className="bg-white w-full max-w-sm rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl z-10 animate-in slide-in-from-bottom-10 duration-300">
+          <div className="bg-white w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl z-10 animate-in zoom-in-95 duration-300">
             <div className="px-5 py-4 border-b border-slate-50 flex justify-between items-center bg-white">
               <div>
                 <h3 className="font-bold text-lg text-slate-800">选择班级</h3>
@@ -183,7 +196,7 @@ const Shortcut = ({ icon, label, onClick }: { icon: React.ReactNode, label: stri
     onClick={onClick} 
     className="flex flex-col items-center gap-2 active:scale-95 transition-transform group w-full"
   >
-    <div className="w-14 h-14 shadow-sm group-hover:shadow-md transition-shadow duration-200">
+    <div className="w-14 h-14 rounded-2xl shadow-sm group-hover:shadow-md transition-shadow duration-200">
       {icon}
     </div>
     <span className="text-xs font-medium text-slate-600 group-hover:text-slate-900">{label}</span>
