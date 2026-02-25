@@ -201,6 +201,16 @@ class DataManager {
       cls.studentCount = cls.students.length;
     }
   }
+
+  graduateStudentInClass(classId: number, studentId: number) {
+    const cls = this.classes.find(c => c.id === classId);
+    if (cls) {
+      const student = cls.students.find(s => s.id === studentId);
+      if (student) {
+        student.status = 'graduated';
+      }
+    }
+  }
 }
 
 export const dataManager = new DataManager();

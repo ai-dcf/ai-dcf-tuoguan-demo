@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Users, Search, CheckCircle, Circle, X, Edit3, GraduationCap, ArrowRightLeft, BookOpen } from 'lucide-react';
+import { ChevronLeft, Plus, Users, Search, CheckCircle, Circle, X, Edit3, GraduationCap, ArrowRightLeft, BookOpen, FileText } from 'lucide-react';
 import { dataManager } from '../../utils/dataManager';
 import type { ClassItem, Student } from '../../utils/dataManager';
 
@@ -104,6 +104,141 @@ const StudentSelector: React.FC<{
         </div>
       </div>
 
+    </div>
+  );
+};
+
+const StudentDetailModal: React.FC<{
+  student: Student;
+  onClose: () => void;
+}> = ({ student, onClose }) => {
+  const mistakes = dataManager.getMistakesByStudentId(student.id);
+  const homeworks = dataManager.getHomeworksByStudentId(student.id);
+  
+  const completedHomeworks = homeworks.filter(h => h.status === 'completed' || h.status === 'reviewed').length;
+  const homeworkRate = homeworks.length > 0 ? Math.round((completedHomeworks / homeworks.length) * 100) : 0;
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="bg-white rounded-[2rem] w-full max-w-sm h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
+          <h3 className="font-bold text-lg text-slate-800">学生详情</h3>
+          <button onClick={onClose} className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all">
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-auto">
+          {/* Basic Info Header */}
+          <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50/30">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-2xl font-black text-blue-600 shadow-sm border border-blue-50">
+                {student.name[0]}
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h2 className="text-xl font-bold text-slate-800">{student.name}</h2>
+                  <span className={`text-xs px-2 py-0.5 rounded-full border font-bold ${
+                    student.status === 'active' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-slate-100 text-slate-500 border-slate-200'
+                  }`}>
+                    {student.status === 'active' ? '在读' : '已结班'}
+                  </span>
+                </div>
+                <div className="text-sm text-slate-500 font-medium">{student.grade} {student.class}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">家长姓名</div>
+                <div className="text-sm font-bold text-slate-700">{student.parent}</div>
+              </div>
+              <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">联系电话</div>
+                <div className="text-sm font-bold text-slate-700">{student.phone}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats & Details */}
+          <div className="p-6 space-y-6">
+            {/* Homework Stats */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-bold text-slate-800 flex items-center gap-2">
+                  <FileText size={16} className="text-blue-500" />
+                  作业概况
+                </h4>
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg">{homeworkRate}% 完成率</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-slate-50 p-3 rounded-2xl text-center">
+                  <div className="text-lg font-black text-slate-700">{homeworks.length}</div>
+                  <div className="text-[10px] text-slate-400 font-medium">总作业</div>
+                </div>
+                <div className="bg-green-50 p-3 rounded-2xl text-center">
+                  <div className="text-lg font-black text-green-600">{completedHomeworks}</div>
+                  <div className="text-[10px] text-green-400 font-medium">已完成</div>
+                </div>
+                <div className="bg-orange-50 p-3 rounded-2xl text-center">
+                  <div className="text-lg font-black text-orange-600">{homeworks.length - completedHomeworks}</div>
+                  <div className="text-[10px] text-orange-400 font-medium">待补交</div>
+                </div>
+              </div>
+            </section>
+
+            {/* Mistakes List */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-bold text-slate-800 flex items-center gap-2">
+                  <BookOpen size={16} className="text-orange-500" />
+                  错题记录
+                </h4>
+                <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">{mistakes.length} 项</span>
+              </div>
+              <div className="space-y-2">
+                {mistakes.length > 0 ? (
+                  mistakes.map(mistake => (
+                    <div key={mistake.id} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold ${
+                          mistake.subject === '数学' ? 'bg-blue-50 text-blue-500' :
+                          mistake.subject === '英语' ? 'bg-indigo-50 text-indigo-500' :
+                          'bg-red-50 text-red-500'
+                        }`}>
+                          {mistake.subject[0]}
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-slate-700">{mistake.title}</div>
+                          <div className="text-[10px] text-slate-400">{mistake.date}</div>
+                        </div>
+                      </div>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold ${
+                        mistake.status === 'corrected' ? 'bg-green-50 text-green-500' : 'bg-orange-50 text-orange-500'
+                      }`}>
+                        {mistake.status === 'corrected' ? '已订正' : '未订正'}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                    <p className="text-xs text-slate-400 font-medium">暂无错题记录</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+        </div>
+        
+        <div className="p-4 border-t border-slate-100 bg-white safe-area-bottom">
+          <button 
+            onClick={onClose}
+            className="w-full bg-slate-900 text-white py-3.5 rounded-2xl font-bold shadow-lg shadow-slate-200 active:scale-[0.98] transition-all"
+          >
+            返回
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -286,6 +421,7 @@ const ClassDetailView: React.FC<{
   const [showSelector, setShowSelector] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [transferringStudent, setTransferringStudent] = useState<Student | null>(null);
+  const [selectedDetailStudent, setSelectedDetailStudent] = useState<Student | null>(null);
 
   // Calculate stats
   const activeCount = cls.students.filter(s => s.status === 'active').length;
@@ -372,7 +508,8 @@ const ClassDetailView: React.FC<{
                 return (
                   <div 
                     key={student.id} 
-                    className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300"
+                    onClick={() => setSelectedDetailStudent(student)}
+                    className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-3">
@@ -409,26 +546,31 @@ const ClassDetailView: React.FC<{
 
                     <div className="flex items-center justify-end gap-2 border-t border-slate-50 pt-3">
                        <button 
-                         onClick={() => setEditingStudent(student)}
+                         onClick={(e) => { e.stopPropagation(); setEditingStudent(student); }}
                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 active:scale-95 transition-all"
                        >
                          <Edit3 size={14} /> 编辑
                        </button>
                        <button 
-                         onClick={() => setTransferringStudent(student)}
+                         onClick={(e) => { e.stopPropagation(); setTransferringStudent(student); }}
                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 active:scale-95 transition-all"
                        >
                          <ArrowRightLeft size={14} /> 转班
                        </button>
-                       <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 active:scale-95 transition-all">
+                       <button 
+                         onClick={(e) => { e.stopPropagation(); setSelectedDetailStudent(student); }}
+                         className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 active:scale-95 transition-all"
+                       >
                          <BookOpen size={14} /> 错题
                        </button>
-                       <button 
-                        onClick={() => onRemoveStudent(student.id)}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 active:scale-95 transition-all"
-                       >
-                         <GraduationCap size={14} /> 结班
-                       </button>
+                       {student.status === 'active' && (
+                         <button 
+                          onClick={(e) => { e.stopPropagation(); onRemoveStudent(student.id); }}
+                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 active:scale-95 transition-all"
+                         >
+                           <GraduationCap size={14} /> 结班
+                         </button>
+                       )}
                     </div>
                   </div>
                 );
@@ -474,6 +616,13 @@ const ClassDetailView: React.FC<{
             setTransferringStudent(null);
           }}
           onClose={() => setTransferringStudent(null)}
+        />
+      )}
+
+      {selectedDetailStudent && (
+        <StudentDetailModal 
+          student={selectedDetailStudent}
+          onClose={() => setSelectedDetailStudent(null)}
         />
       )}
     </div>
@@ -570,10 +719,10 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
 
   const handleRemoveStudent = (studentId: number) => {
     if (selectedClass) {
-      dataManager.removeStudentFromClass(selectedClass.id, studentId);
+      dataManager.graduateStudentInClass(selectedClass.id, studentId);
       // Refresh selected class data
       const updatedClass = dataManager.getClasses().find(c => c.id === selectedClass.id);
-      if (updatedClass) setSelectedClass(updatedClass);
+      if (updatedClass) setSelectedClass({...updatedClass});
       setForceUpdate(prev => prev + 1);
     }
   };
