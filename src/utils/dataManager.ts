@@ -12,6 +12,11 @@ export interface Student {
   notes?: string;
 }
 
+export interface CustodyType {
+  id: number;
+  name: string;
+}
+
 export interface ClassItem {
   id: number;
   name: string;
@@ -19,7 +24,7 @@ export interface ClassItem {
   teacher: string;
   studentCount: number;
   students: Student[];
-  custodyType?: 'lunch' | 'dinner' | 'both';
+  custodyType?: string; // Change to string to support dynamic types
   status?: 'not_started' | 'in_progress' | 'closed';
 }
 
@@ -80,7 +85,7 @@ class DataManager {
       grade: '一年级', 
       teacher: '张老师',
       studentCount: 2,
-      custodyType: 'lunch',
+      custodyType: '午托',
       status: 'in_progress',
       students: [
         { id: 5, name: '孙悟空', grade: '一年级', class: '1班', school: '实验小学', parent: '菩提老祖', phone: '13800138005', status: 'active' },
@@ -93,7 +98,7 @@ class DataManager {
       grade: '二年级', 
       teacher: '李老师',
       studentCount: 0,
-      custodyType: 'dinner',
+      custodyType: '晚托',
       status: 'not_started',
       students: []
     },
@@ -103,10 +108,16 @@ class DataManager {
       grade: '三年级', 
       teacher: '王老师',
       studentCount: 0,
-      custodyType: 'lunch',
+      custodyType: '午托',
       status: 'closed',
       students: []
     },
+  ];
+
+  private custodyTypes: CustodyType[] = [
+    { id: 1, name: '午托' },
+    { id: 2, name: '晚托' },
+    { id: 3, name: '全托' },
   ];
 
   getStudents(): Student[] {
@@ -119,6 +130,25 @@ class DataManager {
 
   getTeachers(): string[] {
     return [...this.teachers];
+  }
+
+  getCustodyTypes(): CustodyType[] {
+    return [...this.custodyTypes];
+  }
+
+  addCustodyType(type: CustodyType) {
+    this.custodyTypes.push(type);
+  }
+
+  deleteCustodyType(id: number) {
+    this.custodyTypes = this.custodyTypes.filter(t => t.id !== id);
+  }
+
+  updateCustodyType(updatedType: CustodyType) {
+    const index = this.custodyTypes.findIndex(t => t.id === updatedType.id);
+    if (index !== -1) {
+      this.custodyTypes[index] = updatedType;
+    }
   }
 
   getHomeworks(): Homework[] {

@@ -23,8 +23,8 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
   };
 
   const activeClasses = classes.filter(c => c.status !== 'closed');
-  const lunchClasses = activeClasses.filter(c => c.custodyType === 'lunch');
-  const dinnerClasses = activeClasses.filter(c => c.custodyType === 'dinner');
+  const lunchClasses = activeClasses.filter(c => c.custodyType === '午托');
+  const dinnerClasses = activeClasses.filter(c => c.custodyType === '晚托');
 
   return (
     <div className="bg-slate-50 min-h-screen relative pb-20">

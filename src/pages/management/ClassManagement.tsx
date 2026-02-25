@@ -639,16 +639,17 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
     name: string, 
     grade: string, 
     teacher: string,
-    custodyType: 'lunch' | 'dinner' | 'both',
+    custodyType: string,
     status: 'not_started' | 'in_progress' | 'closed'
   }>({ 
-    name: '', grade: '', teacher: '', custodyType: 'lunch', status: 'not_started'
+    name: '', grade: '', teacher: '', custodyType: '', status: 'not_started'
   });
   
   // Force update to reflect data changes
   const [, setForceUpdate] = useState(0);
   const classes = dataManager.getClasses();
   const teachers = dataManager.getTeachers();
+  const custodyTypes = dataManager.getCustodyTypes();
 
   const handleClassClick = (cls: ClassItem) => {
     setSelectedClass(cls);
@@ -658,7 +659,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
   const openAddModal = () => {
     setIsEditing(false);
     setEditingId(null);
-    setClassForm({ name: '', grade: '', teacher: '', custodyType: 'lunch', status: 'not_started' });
+    setClassForm({ name: '', grade: '', teacher: '', custodyType: custodyTypes[0]?.name || '', status: 'not_started' });
     setShowAddModal(true);
   };
 
@@ -669,7 +670,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
       name: cls.name, 
       grade: cls.grade, 
       teacher: cls.teacher, 
-      custodyType: cls.custodyType || 'lunch',
+      custodyType: cls.custodyType || '',
       status: cls.status || 'not_started'
     });
     setShowAddModal(true);
@@ -806,9 +807,9 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
   }
 
   // Group classes by custody type
-  const lunchClasses = classes.filter(c => c.custodyType === 'lunch');
-  const dinnerClasses = classes.filter(c => c.custodyType === 'dinner');
-  const otherClasses = classes.filter(c => c.custodyType !== 'lunch' && c.custodyType !== 'dinner');
+  const lunchClasses = classes.filter(c => c.custodyType === '午托');
+  const dinnerClasses = classes.filter(c => c.custodyType === '晚托');
+  const otherClasses = classes.filter(c => c.custodyType !== '午托' && c.custodyType !== '晚托');
 
   const renderClassCard = (cls: ClassItem, index: number) => (
     <div 
@@ -824,11 +825,13 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
             {cls.name}
             {cls.custodyType && (
               <span className={`text-xs px-2 py-0.5 rounded-full border ${
-                cls.custodyType === 'lunch' 
+                cls.custodyType === '午托' 
                   ? 'bg-orange-50 text-orange-600 border-orange-100' 
-                  : 'bg-indigo-50 text-indigo-600 border-indigo-100'
+                  : cls.custodyType === '晚托'
+                  ? 'bg-indigo-50 text-indigo-600 border-indigo-100'
+                  : 'bg-blue-50 text-blue-600 border-blue-100'
               }`}>
-                {cls.custodyType === 'lunch' ? '午托' : '晚托'}
+                {cls.custodyType}
               </span>
             )}
             {cls.status === 'not_started' && (
@@ -968,27 +971,19 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
             <div className="p-6 space-y-5">
               <div className="space-y-2">
                 <label className="block text-sm font-bold text-slate-700 ml-1">托管类型</label>
-                <div className="grid grid-cols-2 gap-4">
-                  <label className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all ${classForm.custodyType === 'lunch' ? 'border-orange-200 bg-orange-50 text-orange-700' : 'border-slate-100 bg-slate-50 text-slate-500 hover:bg-white'}`}>
-                    <input 
-                      type="radio" 
-                      name="custodyType" 
-                      checked={classForm.custodyType === 'lunch'} 
-                      onChange={() => setClassForm({...classForm, custodyType: 'lunch'})}
-                      className="hidden"
-                    />
-                    <span className="font-bold">午托</span>
-                  </label>
-                  <label className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all ${classForm.custodyType === 'dinner' ? 'border-indigo-200 bg-indigo-50 text-indigo-700' : 'border-slate-100 bg-slate-50 text-slate-500 hover:bg-white'}`}>
-                    <input 
-                      type="radio" 
-                      name="custodyType" 
-                      checked={classForm.custodyType === 'dinner'} 
-                      onChange={() => setClassForm({...classForm, custodyType: 'dinner'})}
-                      className="hidden"
-                    />
-                    <span className="font-bold">晚托</span>
-                  </label>
+                <div className="relative">
+                  <select
+                    value={classForm.custodyType}
+                    onChange={e => setClassForm({...classForm, custodyType: e.target.value})}
+                    className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800 font-medium hover:bg-white appearance-none"
+                  >
+                    {custodyTypes.map(type => (
+                      <option key={type.id} value={type.name}>{type.name}</option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                    <ChevronLeft size={16} className="-rotate-90" />
+                  </div>
                 </div>
               </div>
 

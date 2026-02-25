@@ -119,7 +119,11 @@ const TeachingSettings: React.FC<TeachingSettingsProps> = ({ onBack }) => {
                 <span>{item}</span>
                 <button 
                   onClick={() => handleDelete(index)}
-                  className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:bg-red-100 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
+                  className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${
+                    activeTab === 'tags'
+                      ? 'text-orange-400 hover:bg-orange-200/50 hover:text-orange-700'
+                      : 'text-slate-400 hover:bg-red-50 hover:text-red-500'
+                  }`}
                 >
                   <X size={14} />
                 </button>
