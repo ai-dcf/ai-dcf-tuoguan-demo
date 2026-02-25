@@ -17,7 +17,7 @@ function App() {
   const [mistakeClassId, setMistakeClassId] = useState<string | null>(null);
   const [attendanceClassId, setAttendanceClassId] = useState<string | null>(null);
   const [homeworkClassId, setHomeworkClassId] = useState<string | null>(null);
-  const [initialTab, setInitialTab] = useState<'attendance' | 'homework' | 'review' | 'history' | 'affairs'>('attendance');
+  const [initialTab, setInitialTab] = useState<'attendance' | 'homework' | 'review' | 'history'>('attendance');
 
   // If a class is selected, show Class Detail (full screen)
   if (selectedClassId) {
@@ -54,7 +54,7 @@ function App() {
                 setCurrentView('homework');
               } else {
                 setSelectedClassId(id);
-                if (tab) setInitialTab(tab as any);
+                setInitialTab('attendance');
               }
             }} 
             onNavigate={setCurrentView}

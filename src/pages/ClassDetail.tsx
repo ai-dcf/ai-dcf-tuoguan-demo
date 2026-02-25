@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { ChevronLeft, UserCheck, FileText, Star, Clock, Users } from 'lucide-react';
+import { ChevronLeft, UserCheck, FileText, Star, Clock } from 'lucide-react';
 import AttendanceView from '../components/AttendanceView';
 import HomeworkView from '../components/HomeworkView';
 import ReviewView from '../components/ReviewView';
 import HistoryView from '../components/HistoryView';
-import ClassAffairsView from '../components/ClassAffairsView';
 
 interface ClassDetailProps {
   classId: string;
@@ -12,7 +11,7 @@ interface ClassDetailProps {
   initialTab?: Tab;
 }
 
-type Tab = 'attendance' | 'homework' | 'review' | 'history' | 'affairs';
+type Tab = 'attendance' | 'homework' | 'review' | 'history';
 
 const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab = 'attendance' }) => {
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
@@ -22,7 +21,6 @@ const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab =
     { id: 'homework', label: '作业', icon: FileText },
     { id: 'review', label: '点评', icon: Star },
     { id: 'history', label: '历史', icon: Clock },
-    { id: 'affairs', label: '班务', icon: Users },
   ];
 
   return (
@@ -78,7 +76,6 @@ const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab =
             {activeTab === 'homework' && <HomeworkView />}
             {activeTab === 'review' && <ReviewView />}
             {activeTab === 'history' && <HistoryView />}
-            {activeTab === 'affairs' && <ClassAffairsView />}
         </div>
       </div>
     </div>

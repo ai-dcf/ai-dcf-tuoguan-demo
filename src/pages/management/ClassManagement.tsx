@@ -501,7 +501,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
   });
   
   // Force update to reflect data changes
-  const [_, setForceUpdate] = useState(0);
+  const [, setForceUpdate] = useState(0);
   const classes = dataManager.getClasses();
   const teachers = dataManager.getTeachers();
 

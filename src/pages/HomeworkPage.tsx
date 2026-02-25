@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, Search, CheckCircle, Clock, Edit3, X, Filter, BookOpen, Star } from 'lucide-react';
 import { dataManager } from '../utils/dataManager';
 import type { Student, Homework } from '../utils/dataManager';
@@ -10,27 +10,15 @@ interface HomeworkPageProps {
 
 const HomeworkPage: React.FC<HomeworkPageProps> = ({ classId, onBack }) => {
   const [view, setView] = useState<'student-list' | 'homework-list' | 'review'>('student-list');
-  const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [homeworks, setHomeworks] = useState<Homework[]>([]);
   const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null);
   const [reviewData, setReviewData] = useState({ score: '', comment: '' });
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
   const cls = dataManager.getClasses().find(c => c.id.toString() === classId.toString());
   const className = cls ? cls.name : '未知班级';
-
-  useEffect(() => {
-    if (cls) {
-      setStudents(cls.students);
-    }
-  }, [cls]);
-
-  useEffect(() => {
-    if (selectedStudent) {
-      setHomeworks(dataManager.getHomeworksByStudentId(selectedStudent.id));
-    }
-  }, [selectedStudent, view]);
+  const students: Student[] = cls?.students ?? [];
+  const homeworks: Homework[] = selectedStudent ? dataManager.getHomeworksByStudentId(selectedStudent.id) : [];
 
   const getStudentHomeworkStats = (studentId: number) => {
     const hw = dataManager.getHomeworksByStudentId(studentId);
@@ -49,6 +37,7 @@ const HomeworkPage: React.FC<HomeworkPageProps> = ({ classId, onBack }) => {
       dataManager.updateHomework(updatedHomework);
       setView('homework-list');
       setReviewData({ score: '', comment: '' });
+      setSelectedHomework(null);
     }
   };
 
@@ -94,14 +83,14 @@ const HomeworkPage: React.FC<HomeworkPageProps> = ({ classId, onBack }) => {
 
           {/* Filter Tabs */}
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1 no-scrollbar mask-linear-fade">
-            {[
+            {([
               { key: 'all', label: '全部学生' },
               { key: 'pending', label: '待点评' },
               { key: 'completed', label: '已完成' }
-            ].map(tab => (
+            ] as const).map(tab => (
               <button 
                 key={tab.key}
-                onClick={() => setFilter(tab.key as any)}
+                onClick={() => setFilter(tab.key)}
                 className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
                   filter === tab.key 
                     ? 'bg-slate-800 text-white shadow-md transform scale-105' 

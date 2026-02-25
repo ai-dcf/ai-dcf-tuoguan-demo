@@ -135,7 +135,12 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
           <div className="relative">
             <select 
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === 'all' || value === 'active' || value === 'graduated') {
+                  setFilterStatus(value);
+                }
+              }}
               className="h-full pl-3 pr-8 bg-slate-100/80 border-transparent border focus:border-blue-500/50 focus:bg-white rounded-2xl text-sm font-bold text-slate-600 focus:outline-none appearance-none transition-all shadow-sm focus:shadow-md focus:shadow-blue-500/10"
             >
               <option value="all">全部状态</option>

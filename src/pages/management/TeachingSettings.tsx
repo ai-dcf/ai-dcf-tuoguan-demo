@@ -58,14 +58,14 @@ const TeachingSettings: React.FC<TeachingSettingsProps> = ({ onBack }) => {
 
       {/* Tabs */}
       <div className="bg-white/80 backdrop-blur-md px-4 pt-2 border-b border-slate-200/60 flex gap-8 overflow-x-auto no-scrollbar sticky top-[53px] z-10 shadow-sm">
-        {[
+        {([
           { id: 'subjects', label: '学科设置' },
           { id: 'homework', label: '作业类型' },
           { id: 'tags', label: '表现标签' },
-        ].map(tab => (
+        ] as const).map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id)}
             className={`pb-3 text-sm font-bold whitespace-nowrap transition-all relative ${
               activeTab === tab.id ? 'text-blue-600 scale-105' : 'text-slate-500 hover:text-slate-700'
             }`}

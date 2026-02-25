@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Search, Filter, Download, CheckCircle, XCircle, MoreHorizontal, ChevronLeft, Plus, User, Sparkles } from 'lucide-react';
 import MistakeEntry from '../components/MistakeEntry';
+import type { MistakeEntryData } from '../components/MistakeEntry';
 import { dataManager } from '../utils/dataManager';
 import type { Student, Mistake } from '../utils/dataManager';
 
@@ -10,68 +11,40 @@ interface MistakePageProps {
 }
 
 const MistakePage = ({ onBack, classId }: MistakePageProps) => {
-  const [view, setView] = useState<'student-list' | 'mistake-list' | 'entry'>('mistake-list');
-  const [filter, setFilter] = useState('all');
-  const [mistakes, setMistakes] = useState<Mistake[]>([]);
-  
-  // Class & Student Selection
-  const [className, setClassName] = useState('');
-  const [students, setStudents] = useState<Student[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  
-  const [filteredMistakes, setFilteredMistakes] = useState<Mistake[]>([]);
+  const [view, setView] = useState<'student-list' | 'mistake-list' | 'entry'>(() => (classId ? 'student-list' : 'mistake-list'));
+  const [filter, setFilter] = useState<'all' | 'math' | 'english' | 'chinese'>('all');
+  const [mistakes, setMistakes] = useState<Mistake[]>(() => dataManager.getMistakes());
+  const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
 
-  // Initialize data
-  useEffect(() => {
-    // Load initial mistakes from dataManager
-    setMistakes(dataManager.getMistakes());
-  }, []);
+  const cls = classId ? dataManager.getClasses().find(c => c.id.toString() === classId.toString()) : undefined;
+  const className = cls?.name ?? '';
+  const students: Student[] = cls?.students ?? [];
+  const selectedStudent = selectedStudentId ? (students.find(s => s.id === selectedStudentId) ?? null) : null;
 
-  // Handle Class Selection Change
-  useEffect(() => {
-    if (classId) {
-      const cls = dataManager.getClasses().find(c => c.id.toString() === classId.toString());
-      if (cls) {
-        setClassName(cls.name);
-        setStudents(cls.students);
-        setView('student-list'); // Default to student list when class is selected
-        setSelectedStudent(null);
-      }
-    } else {
-      setView('mistake-list');
-    }
-  }, [classId]);
+  const subjectMap: Record<'math' | 'english' | 'chinese', string> = {
+    math: '数学',
+    english: '英语',
+    chinese: '语文',
+  };
 
-  // Handle Filtering
-  useEffect(() => {
+  const filteredMistakes = (() => {
     let currentMistakes = mistakes;
 
-    // Filter by student if selected
     if (selectedStudent) {
       currentMistakes = currentMistakes.filter(m => m.studentId === selectedStudent.id);
-    } 
-    else if (classId) {
-       const cls = dataManager.getClasses().find(c => c.id.toString() === classId.toString());
-       if (cls) {
-         const studentIds = cls.students.map(s => s.id);
-         currentMistakes = currentMistakes.filter(m => studentIds.includes(m.studentId));
-       }
+    } else if (classId && cls) {
+      const studentIds = cls.students.map(s => s.id);
+      currentMistakes = currentMistakes.filter(m => studentIds.includes(m.studentId));
     }
 
-    // Subject Filter
     if (filter !== 'all') {
-      const subjectMap: Record<string, string> = {
-        'math': '数学',
-        'english': '英语',
-        'chinese': '语文'
-      };
       currentMistakes = currentMistakes.filter(item => item.subject === subjectMap[filter]);
     }
-    
-    setFilteredMistakes(currentMistakes);
-  }, [classId, filter, mistakes, selectedStudent]);
 
-  const handleSaveMistake = (data: any) => {
+    return currentMistakes;
+  })();
+
+  const handleSaveMistake = (data: MistakeEntryData) => {
     let sId = 0;
     let sName = data.student || '未关联';
     if (selectedStudent) {
@@ -85,20 +58,22 @@ const MistakePage = ({ onBack, classId }: MistakePageProps) => {
         }
     }
 
+    const nextId = mistakes.reduce((max, m) => Math.max(max, m.id), 0) + 1;
+
     const newMistake: Mistake = {
-      id: Date.now(),
+      id: nextId,
       studentId: sId,
       studentName: sName,
-      subject: data.subject,
+      subject: subjectMap[data.subject],
       title: data.knowledgePoint || '未命名错题',
-      date: new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' }),
+      date: '02-24',
       status: 'pending',
       image: true
     };
     
     dataManager.addMistake(newMistake);
-    setMistakes([...mistakes, newMistake]); 
-    setView(selectedStudent ? 'mistake-list' : 'student-list');
+    setMistakes(prev => [...prev, newMistake]);
+    setView(selectedStudent ? 'mistake-list' : classId ? 'student-list' : 'mistake-list');
   };
 
   const getStudentMistakeCount = (studentId: number) => {
@@ -108,7 +83,7 @@ const MistakePage = ({ onBack, classId }: MistakePageProps) => {
   };
 
   if (view === 'entry') {
-    return <MistakeEntry onBack={() => setView(selectedStudent ? 'mistake-list' : 'student-list')} onSave={handleSaveMistake} initialData={{ student: selectedStudent?.name }} />;
+    return <MistakeEntry onBack={() => setView(selectedStudent ? 'mistake-list' : classId ? 'student-list' : 'mistake-list')} onSave={handleSaveMistake} initialData={{ student: selectedStudent?.name }} />;
   }
 
   // Render Student List View
@@ -145,7 +120,7 @@ const MistakePage = ({ onBack, classId }: MistakePageProps) => {
                     <button 
                         key={student.id}
                         onClick={() => {
-                            setSelectedStudent(student);
+                            setSelectedStudentId(student.id);
                             setView('mistake-list');
                         }}
                         className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center active:scale-[0.98] transition-all hover:shadow-md hover:border-blue-100 group"
@@ -187,8 +162,8 @@ const MistakePage = ({ onBack, classId }: MistakePageProps) => {
           <div className="flex items-center gap-2">
             <button onClick={() => {
                 if (selectedStudent) {
-                    setSelectedStudent(null);
-                    setView('student-list');
+                    setSelectedStudentId(null);
+                    setView(classId ? 'student-list' : 'mistake-list');
                 } else if (onBack) {
                     onBack();
                 }
@@ -221,12 +196,12 @@ const MistakePage = ({ onBack, classId }: MistakePageProps) => {
         {/* Filters */}
         <div className="flex justify-between items-center pt-1">
           <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar mask-linear-fade">
-            {[
+            {([
                 { key: 'all', label: '全部' },
                 { key: 'math', label: '数学' },
                 { key: 'english', label: '英语' },
                 { key: 'chinese', label: '语文' }
-            ].map(tab => (
+            ] as const).map(tab => (
                 <button 
                   key={tab.key}
                   onClick={() => setFilter(tab.key)}

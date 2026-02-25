@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BookOpen, UserCheck, CalendarX, FileText, Bell, ChevronRight, X, Sparkles, MapPin } from 'lucide-react';
 import type { ViewState } from '../types';
 import { dataManager } from '../utils/dataManager';
@@ -11,11 +11,7 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
   const [showClassSelector, setShowClassSelector] = useState<{ show: boolean, type: 'attendance' | 'homework' | 'mistake' }>({ show: false, type: 'attendance' });
-  const [classes, setClasses] = useState<ClassItem[]>([]);
-
-  useEffect(() => {
-    setClasses(dataManager.getClasses());
-  }, []);
+  const classes: ClassItem[] = dataManager.getClasses();
 
   const handleShortcutClick = (type: 'attendance' | 'homework' | 'mistake') => {
     setShowClassSelector({ show: true, type });

@@ -5,8 +5,8 @@ const ClassAffairsView = () => {
     id: i + 1,
     name: `学生${i + 1}`,
     grade: '一年级',
-    rate: 90 + Math.floor(Math.random() * 10),
-    mistakes: Math.floor(Math.random() * 10),
+    rate: 90 + (i % 10),
+    mistakes: i % 10,
     status: 'active'
   }));
 

@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Camera, Image as ImageIcon, XCircle } from 'lucide-react';
 
+export type MistakeEntryData = {
+  subject: 'math' | 'chinese' | 'english';
+  mode: 'mistake' | 'exercise';
+  student: string;
+  knowledgePoint: string;
+  reason: string;
+};
+
 interface MistakeEntryProps {
   onBack: () => void;
-  onSave: (data: any) => void;
+  onSave: (data: MistakeEntryData) => void;
   initialData?: {
     student?: string;
-    subject?: string;
+    subject?: MistakeEntryData['subject'];
     knowledgePoint?: string;
-    reason?: string;
+    reason?: MistakeEntryData['reason'];
   };
 }
 
 const MistakeEntry: React.FC<MistakeEntryProps> = ({ onBack, onSave, initialData }) => {
   const [step, setStep] = useState<'photo' | 'edit'>('photo');
-  const [data, setData] = useState({
+  const [data, setData] = useState<MistakeEntryData>({
     subject: initialData?.subject || 'math',
     mode: 'mistake',
     student: initialData?.student || '',
@@ -40,7 +48,12 @@ const MistakeEntry: React.FC<MistakeEntryProps> = ({ onBack, onSave, initialData
           <select 
             className="bg-zinc-800 text-white px-4 py-1.5 rounded-full text-sm outline-none appearance-none border border-zinc-700"
             value={data.subject}
-            onChange={e => setData({...data, subject: e.target.value})}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === 'math' || value === 'chinese' || value === 'english') {
+                setData({ ...data, subject: value });
+              }
+            }}
           >
             <option value="math">数学</option>
             <option value="chinese">语文</option>
@@ -49,7 +62,12 @@ const MistakeEntry: React.FC<MistakeEntryProps> = ({ onBack, onSave, initialData
           <select 
             className="bg-zinc-800 text-white px-4 py-1.5 rounded-full text-sm outline-none appearance-none border border-zinc-700"
             value={data.mode}
-            onChange={e => setData({...data, mode: e.target.value})}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === 'mistake' || value === 'exercise') {
+                setData({ ...data, mode: value });
+              }
+            }}
           >
             <option value="mistake">错题</option>
             <option value="exercise">练习</option>
