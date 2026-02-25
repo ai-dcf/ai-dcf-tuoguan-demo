@@ -317,24 +317,20 @@ const ClassDetailView: React.FC<{
                   </span>
                 )}
               </div>
-              <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${
-                cls.status === 'closed' ? 'bg-slate-100/20 text-slate-100 border-white/20' : 'bg-green-400/20 text-green-100 border-green-400/30'
+              <div className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${
+                cls.status === 'closed' ? 'bg-slate-100/20 text-slate-100 border-white/20' : 
+                cls.status === 'not_started' ? 'bg-blue-400/20 text-blue-100 border-blue-400/30' :
+                'bg-green-400/20 text-green-100 border-green-400/30'
               }`}>
-                {cls.status === 'closed' ? '已结班' : '进行中'}
-              </span>
+                {cls.status === 'closed' ? '已结班' : cls.status === 'not_started' ? '未开始' : '进行中'}
+              </div>
             </div>
             
             <div className="flex flex-col gap-1 text-blue-100 text-sm mb-6">
               <div className="flex items-center gap-2">
                 <span className="bg-white/20 px-2 py-0.5 rounded-md text-xs font-bold backdrop-blur-sm">{cls.grade}</span>
-                <span className="font-medium">主教：{cls.mainTeacher}</span>
+                <span className="font-medium">教师：{cls.teacher}</span>
               </div>
-              {cls.assistantTeacher && (
-                 <div className="flex items-center gap-2">
-                   <span className="opacity-0 px-2"></span>
-                   <span className="font-medium text-blue-200">助教：{cls.assistantTeacher}</span>
-                 </div>
-              )}
             </div>
             
             <div className="grid grid-cols-3 gap-3">
@@ -493,11 +489,11 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
   const [classForm, setClassForm] = useState<{
     name: string, 
     grade: string, 
-    mainTeacher: string, 
-    assistantTeacher: string,
-    custodyType: 'lunch' | 'dinner' | 'both'
+    teacher: string,
+    custodyType: 'lunch' | 'dinner' | 'both',
+    status: 'not_started' | 'in_progress' | 'closed'
   }>({ 
-    name: '', grade: '', mainTeacher: '', assistantTeacher: '', custodyType: 'lunch' 
+    name: '', grade: '', teacher: '', custodyType: 'lunch', status: 'not_started'
   });
   
   // Force update to reflect data changes
@@ -513,7 +509,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
   const openAddModal = () => {
     setIsEditing(false);
     setEditingId(null);
-    setClassForm({ name: '', grade: '', mainTeacher: '', assistantTeacher: '', custodyType: 'lunch' });
+    setClassForm({ name: '', grade: '', teacher: '', custodyType: 'lunch', status: 'not_started' });
     setShowAddModal(true);
   };
 
@@ -523,9 +519,9 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
     setClassForm({ 
       name: cls.name, 
       grade: cls.grade, 
-      mainTeacher: cls.mainTeacher, 
-      assistantTeacher: cls.assistantTeacher || '',
-      custodyType: cls.custodyType || 'lunch' 
+      teacher: cls.teacher, 
+      custodyType: cls.custodyType || 'lunch',
+      status: cls.status || 'not_started'
     });
     setShowAddModal(true);
   };
@@ -538,9 +534,9 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
         if (cls) {
           cls.name = classForm.name;
           cls.grade = classForm.grade;
-          cls.mainTeacher = classForm.mainTeacher || '未分配';
-          cls.assistantTeacher = classForm.assistantTeacher;
+          cls.teacher = classForm.teacher || '未分配';
           cls.custodyType = classForm.custodyType;
+          cls.status = classForm.status;
         }
       } else {
         // Add new class
@@ -548,12 +544,11 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
           id: Date.now(),
           name: classForm.name,
           grade: classForm.grade,
-          mainTeacher: classForm.mainTeacher || '未分配',
-          assistantTeacher: classForm.assistantTeacher,
+          teacher: classForm.teacher || '未分配',
           studentCount: 0,
           students: [],
           custodyType: classForm.custodyType,
-          status: 'active'
+          status: classForm.status
         };
         dataManager.addClass(newClassItem);
       }
@@ -687,6 +682,16 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
                 {cls.custodyType === 'lunch' ? '午托' : '晚托'}
               </span>
             )}
+            {cls.status === 'not_started' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-500 border border-blue-100">
+                未开始
+              </span>
+            )}
+            {cls.status === 'in_progress' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-100">
+                进行中
+              </span>
+            )}
             {cls.status === 'closed' && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200">
                 已结班
@@ -699,7 +704,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
               <span>{cls.grade}</span>
             </div>
             <div className="text-xs text-slate-400">
-              主教: {cls.mainTeacher} {cls.assistantTeacher && `/ 助教: ${cls.assistantTeacher}`}
+              教师: {cls.teacher}
             </div>
           </div>
         </div>
@@ -862,14 +867,14 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-slate-700 ml-1">主教老师</label>
+                    <label className="block text-sm font-bold text-slate-700 ml-1">教师</label>
                     <div className="relative">
                       <select
-                        value={classForm.mainTeacher}
-                        onChange={e => setClassForm({...classForm, mainTeacher: e.target.value})}
+                        value={classForm.teacher}
+                        onChange={e => setClassForm({...classForm, teacher: e.target.value})}
                         className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800 font-medium hover:bg-white appearance-none"
                       >
-                        <option value="">请选择主教</option>
+                        <option value="">请选择教师</option>
                         {teachers.map(teacher => (
                           <option key={teacher} value={teacher}>{teacher}</option>
                         ))}
@@ -880,17 +885,16 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-slate-700 ml-1">助教老师</label>
+                    <label className="block text-sm font-bold text-slate-700 ml-1">班级状态</label>
                     <div className="relative">
                       <select
-                        value={classForm.assistantTeacher}
-                        onChange={e => setClassForm({...classForm, assistantTeacher: e.target.value})}
+                        value={classForm.status}
+                        onChange={e => setClassForm({...classForm, status: e.target.value as 'not_started' | 'in_progress' | 'closed'})}
                         className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800 font-medium hover:bg-white appearance-none"
                       >
-                        <option value="">请选择助教 (选填)</option>
-                        {teachers.map(teacher => (
-                          <option key={teacher} value={teacher}>{teacher}</option>
-                        ))}
+                        <option value="not_started">未开始</option>
+                        <option value="in_progress">进行中</option>
+                        <option value="closed">已结班</option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                         <ChevronLeft size={16} className="-rotate-90" />
@@ -901,7 +905,7 @@ const ClassManagement: React.FC<ClassManagementProps> = ({ onBack }) => {
 
               <button
                 onClick={handleSaveClass}
-                disabled={!classForm.name || !classForm.grade || !classForm.mainTeacher}
+                disabled={!classForm.name || !classForm.grade || !classForm.teacher}
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 active:scale-[0.98] transition-all disabled:opacity-50 disabled:shadow-none mt-4 hover:brightness-110"
               >
                 {isEditing ? '保存修改' : '确认创建'}

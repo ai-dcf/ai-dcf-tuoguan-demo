@@ -16,12 +16,11 @@ export interface ClassItem {
   id: number;
   name: string;
   grade: string;
-  mainTeacher: string;
-  assistantTeacher?: string;
+  teacher: string;
   studentCount: number;
   students: Student[];
   custodyType?: 'lunch' | 'dinner' | 'both';
-  status?: 'active' | 'closed';
+  status?: 'not_started' | 'in_progress' | 'closed';
 }
 
 export interface Mistake {
@@ -79,11 +78,10 @@ class DataManager {
       id: 1, 
       name: '一年级1班', 
       grade: '一年级', 
-      mainTeacher: '张老师',
-      assistantTeacher: '李老师',
+      teacher: '张老师',
       studentCount: 2,
       custodyType: 'lunch',
-      status: 'active',
+      status: 'in_progress',
       students: [
         { id: 5, name: '孙悟空', grade: '一年级', class: '1班', school: '实验小学', parent: '菩提老祖', phone: '13800138005', status: 'active' },
         { id: 6, name: '猪八戒', grade: '一年级', class: '1班', school: '实验小学', parent: '高翠兰', phone: '13800138006', status: 'active' }
@@ -93,20 +91,20 @@ class DataManager {
       id: 2, 
       name: '二年级2班', 
       grade: '二年级', 
-      mainTeacher: '李老师',
+      teacher: '李老师',
       studentCount: 0,
       custodyType: 'dinner',
-      status: 'active',
+      status: 'not_started',
       students: []
     },
     { 
       id: 3, 
       name: '三年级1班', 
       grade: '三年级', 
-      mainTeacher: '王老师',
+      teacher: '王老师',
       studentCount: 0,
       custodyType: 'lunch',
-      status: 'active',
+      status: 'closed',
       students: []
     },
   ];
