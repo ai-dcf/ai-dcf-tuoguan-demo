@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Users, School, BookOpen, Utensils, Bell, ChevronRight, Briefcase, GraduationCap, ArrowRight, UserCheck } from 'lucide-react';
+import { Settings, Users, School, BookOpen, Utensils, Bell, Briefcase, GraduationCap, ArrowRight, UserCheck } from 'lucide-react';
 import InstitutionInfo from './management/InstitutionInfo';
 import SchoolLibrary from './management/SchoolLibrary';
 import ClassManagement from './management/ClassManagement';

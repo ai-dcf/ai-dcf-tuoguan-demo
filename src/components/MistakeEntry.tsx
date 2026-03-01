@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Camera, Image as ImageIcon, XCircle, Check, Save } from 'lucide-react';
+import { ChevronLeft, Camera, Image as ImageIcon, XCircle } from 'lucide-react';
 
 export type MistakeEntryData = {
   subject: 'math' | 'chinese' | 'english';

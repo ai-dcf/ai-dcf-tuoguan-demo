@@ -10,9 +10,13 @@ interface LeavePageProps {
 
 const LeavePage: React.FC<LeavePageProps> = ({ activeChild, onBack }) => {
   const [activeTab, setActiveTab] = useState<'apply' | 'history'>('apply');
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    date: string;
+    type: LeaveRequest['type'];
+    reason: string;
+  }>({
     date: new Date().toISOString().split('T')[0],
-    type: '病假' as const,
+    type: '病假',
     reason: ''
   });
   const [showSuccess, setShowSuccess] = useState(false);

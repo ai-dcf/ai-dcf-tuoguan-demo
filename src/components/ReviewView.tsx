@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Camera, Star, AlertCircle, Save, ChevronLeft, GraduationCap, Clock, ChevronRight, X } from 'lucide-react';
+import { Check, Camera, Star, AlertCircle, Save, ChevronLeft, GraduationCap, Clock } from 'lucide-react';
 import MistakeEntry from './MistakeEntry';
 
 interface Student {

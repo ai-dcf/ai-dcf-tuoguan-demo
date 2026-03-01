@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Calendar, Edit3, X, Save, ChefHat } from 'lucide-react';
+import { ChevronLeft, Calendar, Edit3, X, ChefHat } from 'lucide-react';
 
 interface RecipePublishingProps {
   onBack: () => void;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, Check, X, Clock, Calendar, FileText } from 'lucide-react';
+import { ChevronLeft, Check, X, Calendar, FileText } from 'lucide-react';
 import { dataManager } from '../../utils/dataManager';
 import type { LeaveRequest } from '../../types';
 

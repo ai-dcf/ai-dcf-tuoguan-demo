@@ -16,8 +16,9 @@ type MealCardProps = {
   borderColor: string;
 };
 
-const MealCard: React.FC<MealCardProps> = ({ title, icon: Icon, items, image, colorClass, bgClass, borderColor }) => (
-  <div className={`bg-white rounded-[2rem] overflow-hidden border-2 border-border-main shadow-pop mb-6 group hover:-translate-y-1 hover:shadow-pop-lg transition-all duration-300`}>
+const MealCard: React.FC<MealCardProps> = ({ title, icon: Icon, items, image, colorClass, bgClass }) => (
+  <div className={`bg-white rounded-[2rem] p-5 shadow-pop border-2 border-border-main relative overflow-hidden group`}>
+    <div className={`absolute top-0 right-0 w-24 h-24 ${bgClass} rounded-bl-full opacity-20 -mr-6 -mt-6 transition-transform group-hover:scale-110`}></div>
     <div className={`px-6 py-5 flex items-center gap-3 border-b-2 border-border-main ${bgClass}`}>
       <div className={`p-2.5 rounded-2xl bg-white border-2 border-border-main shadow-pop-sm ${colorClass} group-hover:scale-110 transition-transform duration-300`}>
         <Icon size={22} strokeWidth={2.5} />

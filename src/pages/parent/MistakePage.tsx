@@ -36,7 +36,7 @@ const MistakePage: React.FC<MistakePageProps> = ({ activeChild, onBack }) => {
             >
               <div className="flex items-start gap-4">
                  <button 
-                  onClick={() => setPreviewImage(mistake.imageUrl)}
+                  onClick={() => setPreviewImage(mistake.imageUrl || null)}
                   className="w-24 h-24 bg-surface-muted rounded-2xl flex-shrink-0 overflow-hidden border-2 border-border-main relative group active:scale-95 transition-transform"
                 >
                   <img src={mistake.imageUrl} alt="Mistake" className="w-full h-full object-cover" />
@@ -60,7 +60,7 @@ const MistakePage: React.FC<MistakePageProps> = ({ activeChild, onBack }) => {
               </div>
               
               <button 
-                onClick={() => setPreviewImage(mistake.imageUrl)}
+                onClick={() => setPreviewImage(mistake.imageUrl || null)}
                 className="w-full py-3 bg-secondary/20 text-text-main rounded-xl border-2 border-secondary text-sm font-black flex items-center justify-center gap-2 active:translate-x-[2px] active:translate-y-[2px] transition-all hover:bg-secondary/30"
               >
                 <ImageIcon size={18} strokeWidth={2.5} /> 查看大图

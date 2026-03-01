@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, ChevronRight, UserCircle, Phone, Info, MessageSquare, HelpCircle, LogOut, ShieldCheck, User } from 'lucide-react';
+import { Settings, ChevronRight, Phone, Info, MessageSquare, LogOut, ShieldCheck, User } from 'lucide-react';
 import type { Student as Child } from '../../types';
 
 interface MinePageProps {
@@ -45,7 +45,7 @@ const MinePage: React.FC<MinePageProps> = ({ activeChild, children }) => {
             我的孩子
           </h3>
           <div className="space-y-3">
-            {children.map((child, index) => (
+            {children.map((child) => (
               <div 
                 key={child.id} 
                 className={`bg-white p-4 rounded-2xl border-2 border-[#2D3436] shadow-[4px_4px_0px_0px_#2D3436] flex items-center justify-between group active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_#2D3436] transition-all cursor-pointer ${activeChild.id === child.id ? 'ring-2 ring-[#4ECDC4] ring-offset-2' : ''}`}

@@ -178,7 +178,7 @@ const LearningPage: React.FC<LearningPageProps> = ({ activeChild, onBack, onNavi
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      setPreviewImage(mistake.imageUrl);
+                      setPreviewImage(mistake.imageUrl || null);
                     }}
                     className="w-20 h-20 bg-surface-muted rounded-2xl flex-shrink-0 overflow-hidden border-2 border-border-main relative group-active:scale-95 transition-transform"
                   >

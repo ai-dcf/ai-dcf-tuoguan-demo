@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, UserCheck, CalendarX, FileText, Bell, ChevronRight, X, Sparkles, MapPin, Star } from 'lucide-react';
+import { BookOpen, UserCheck, CalendarX, FileText, Bell, ChevronRight, X, MapPin, Star } from 'lucide-react';
 import type { TeacherViewState as ViewState } from '../../types';
 import { dataManager } from '../../utils/dataManager';
 

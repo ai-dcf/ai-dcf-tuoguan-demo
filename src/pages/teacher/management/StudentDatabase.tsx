@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, Plus, Search, Filter, Phone, User, Calendar, MapPin, FileText, Check, X } from 'lucide-react';
+import { ChevronLeft, Plus, Search, Filter, Phone, User, Calendar, MapPin, FileText, X } from 'lucide-react';
 import { dataManager } from '../../../utils/dataManager';
 import type { Student } from '../../../types';
 
@@ -153,7 +153,7 @@ const StudentDatabase: React.FC<StudentDatabaseProps> = ({ onBack }) => {
 
       {/* Student List */}
       <div className="p-5 space-y-3 flex-1 overflow-y-auto pb-20">
-        {filteredStudents.map((student, index) => (
+        {filteredStudents.map((student) => (
           <div 
             key={student.id} 
             onClick={() => handleStudentClick(student)}
@@ -355,10 +355,10 @@ const InputGroup = ({ label, required, children }: { label: string, required?: b
   </div>
 );
 
-const InfoRow = ({ label, value, icon }: { label: string, value: string, icon: React.ReactNode }) => (
+const InfoRow = ({ label, value, icon }: { label: string, value: string, icon: React.ReactElement }) => (
     <div className="flex items-center justify-between py-2 border-b-2 border-border-main/10 last:border-0">
         <div className="flex items-center gap-2 text-text-light">
-            {React.cloneElement(icon as React.ReactElement, { size: 14, strokeWidth: 2.5 })}
+            {React.cloneElement(icon as any, { size: 14, strokeWidth: 2.5 })}
             <span className="text-sm font-bold">{label}</span>
         </div>
         <span className="font-bold text-text-main text-right">{value}</span>

@@ -71,6 +71,7 @@ export interface Homework {
   date: string;
   status: 'pending' | 'submitted' | 'completed' | 'reviewed' | 'correction_needed';
   score?: string;
+  rating?: string; // Added for compatibility
   comment?: string;
   images?: string[];
   feedback?: string;
@@ -105,6 +106,11 @@ export interface LeaveRequest {
   classId?: number;
   className?: string;
   date: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
+  submitTime?: string;
   type: '病假' | '事假' | '其他';
   reason: string;
   status: 'pending' | 'approved' | 'rejected';

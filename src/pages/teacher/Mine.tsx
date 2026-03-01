@@ -77,7 +77,7 @@ const MenuItem = ({
     badgeCount,
     border = true
 }: { 
-    icon: React.ReactNode, 
+    icon: React.ReactElement, 
     color?: string,
     label: string, 
     isDestructive?: boolean,
@@ -88,7 +88,7 @@ const MenuItem = ({
   <button className={`w-full flex items-center justify-between p-4 hover:bg-surface-muted active:bg-accent transition-colors group ${border ? 'border-b-2 border-border-main/10' : ''}`}>
     <div className="flex items-center gap-4">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center border-2 border-border-main shadow-pop-sm group-active:shadow-none group-active:translate-x-[2px] group-active:translate-y-[2px] transition-all ${color} ${isDestructive ? 'text-white' : 'text-text-main'}`}>
-            {React.cloneElement(icon as React.ReactElement, { strokeWidth: 2.5 })}
+            {React.cloneElement(icon as any, { strokeWidth: 2.5 })}
         </div>
         <span className={`font-bold text-base ${isDestructive ? 'text-primary' : 'text-text-main'}`}>{label}</span>
     </div>

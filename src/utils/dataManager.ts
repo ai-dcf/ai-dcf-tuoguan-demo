@@ -132,6 +132,10 @@ class DataManager {
     return this.students.find(s => s.id === id);
   }
 
+  addStudent(student: Student) {
+    this.students.push(student);
+  }
+
   getClasses(): ClassItem[] {
     return this.classes;
   }
@@ -176,6 +180,10 @@ class DataManager {
 
   getMistakes(): Mistake[] {
     return [...this.mistakes];
+  }
+
+  addMistake(mistake: Mistake) {
+    this.mistakes.push(mistake);
   }
 
   getHomeworks(): Homework[] {
@@ -237,6 +245,17 @@ class DataManager {
 
   getChildHomeworks(studentId: number): Homework[] {
     return this.homeworks.filter(h => h.studentId === studentId);
+  }
+
+  getHomeworksByStudentId(studentId: number): Homework[] {
+    return this.getChildHomeworks(studentId);
+  }
+
+  updateHomework(homework: Homework) {
+    const index = this.homeworks.findIndex(h => h.id === homework.id);
+    if (index !== -1) {
+      this.homeworks[index] = homework;
+    }
   }
 
   getChildMistakes(studentId: number): Mistake[] {
