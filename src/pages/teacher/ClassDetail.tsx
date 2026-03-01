@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ChevronLeft, UserCheck, FileText, Star, Clock } from 'lucide-react';
-import AttendanceView from '../components/AttendanceView';
-import HomeworkView from '../components/HomeworkView';
-import ReviewView from '../components/ReviewView';
-import HistoryView from '../components/HistoryView';
+import AttendanceView from '../../components/AttendanceView';
+import HomeworkView from '../../components/HomeworkView';
+import ReviewView from '../../components/ReviewView';
+import HistoryView from '../../components/HistoryView';
 
-import { dataManager } from '../utils/dataManager';
+import { dataManager } from '../../utils/dataManager';
 
 interface ClassDetailProps {
   classId: string;

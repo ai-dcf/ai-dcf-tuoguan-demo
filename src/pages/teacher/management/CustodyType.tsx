@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Plus, Edit2, Trash2, X } from 'lucide-react';
-import { dataManager } from '../../utils/dataManager';
-import type { CustodyType as CustodyTypeModel } from '../../utils/dataManager';
+import { dataManager } from '../../../utils/dataManager';
+import type { CustodyType as CustodyTypeModel } from '../../../types';
 
 interface CustodyTypeProps {
   onBack: () => void;

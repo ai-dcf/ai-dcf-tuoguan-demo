@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Search, CheckCircle, Clock, Edit3, X, Filter, BookOpen, Star } from 'lucide-react';
-import { dataManager } from '../utils/dataManager';
-import type { Student, Homework } from '../utils/dataManager';
+import { dataManager } from '../../utils/dataManager';
+import type { Student, Homework } from '../../types';
 
 interface HomeworkPageProps {
   classId: string;

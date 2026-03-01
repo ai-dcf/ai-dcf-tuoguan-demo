@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Plus, Search, Filter, Phone, User, Calendar } from 'lucide-react';
-import { dataManager } from '../../utils/dataManager';
-import type { Student } from '../../utils/dataManager';
+import { dataManager } from '../../../utils/dataManager';
+import type { Student } from '../../../types';
 
 interface StudentDatabaseProps {
   onBack: () => void;

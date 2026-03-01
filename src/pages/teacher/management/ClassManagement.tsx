@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Plus, Users, Search, CheckCircle, Circle, X, Edit3, GraduationCap, ArrowRightLeft, BookOpen, FileText } from 'lucide-react';
-import { dataManager } from '../../utils/dataManager';
-import type { ClassItem, Student } from '../../utils/dataManager';
+import { dataManager } from '../../../utils/dataManager';
+import type { ClassItem, Student } from '../../../types';
 
 interface ClassManagementProps {
   onBack: () => void;

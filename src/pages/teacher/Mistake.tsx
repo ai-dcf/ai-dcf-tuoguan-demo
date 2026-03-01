@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Search, Filter, Download, CheckCircle, XCircle, MoreHorizontal, ChevronLeft, Plus, User, Sparkles } from 'lucide-react';
-import MistakeEntry from '../components/MistakeEntry';
-import type { MistakeEntryData } from '../components/MistakeEntry';
-import { dataManager } from '../utils/dataManager';
-import type { Student, Mistake } from '../utils/dataManager';
+import MistakeEntry from '../../components/MistakeEntry';
+import type { MistakeEntryData } from '../../components/MistakeEntry';
+import { dataManager } from '../../utils/dataManager';
+import type { Student, Mistake } from '../../types';
 
 interface MistakePageProps {
   onBack?: () => void;

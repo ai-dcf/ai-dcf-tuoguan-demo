@@ -1,62 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, Check, X, Clock, Calendar, FileText } from 'lucide-react';
-
-interface LeaveRequest {
-  id: string;
-  studentName: string;
-  type: 'sick' | 'personal';
-  startDate: string;
-  endDate: string;
-  reason: string;
-  status: 'pending' | 'approved' | 'rejected';
-  createdAt: string;
-}
+import { dataManager } from '../../utils/dataManager';
+import type { LeaveRequest } from '../../types';
 
 export default function LeavePage({ onBack }: { onBack: () => void }) {
   const [activeTab, setActiveTab] = useState<'pending' | 'history'>('pending');
-  const [requests, setRequests] = useState<LeaveRequest[]>([
-    {
-      id: '1',
-      studentName: '张小明',
-      type: 'sick',
-      startDate: '2026-02-24 14:00',
-      endDate: '2026-02-24 18:00',
-      reason: '发烧去医院',
-      status: 'pending',
-      createdAt: '2026-02-23 10:30'
-    },
-    {
-      id: '2',
-      studentName: '李华',
-      type: 'personal',
-      startDate: '2026-02-25',
-      endDate: '2026-02-25',
-      reason: '家里有事',
-      status: 'approved',
-      createdAt: '2026-02-22 15:00'
-    },
-    {
-      id: '3',
-      studentName: '王强',
-      type: 'sick',
-      startDate: '2026-02-20',
-      endDate: '2026-02-21',
-      reason: '重感冒',
-      status: 'rejected',
-      createdAt: '2026-02-19 09:00'
-    }
-  ]);
+  const [requests, setRequests] = useState<LeaveRequest[]>([]);
+
+  useEffect(() => {
+    const fetchData = () => {
+      setRequests(dataManager.getLeaveRequests());
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleApprove = (id: string) => {
-    setRequests(requests.map(r => 
+    dataManager.approveLeaveRequest(id);
+    setRequests(prev => prev.map(r => 
       r.id === id ? { ...r, status: 'approved' } : r
     ));
   };
 
   const handleReject = (id: string) => {
-    setRequests(requests.map(r => 
-      r.id === id ? { ...r, status: 'rejected' } : r
-    ));
+    const reason = window.prompt('请输入拒绝理由', '暂不批准');
+    if (reason !== null) {
+      dataManager.rejectLeaveRequest(id, reason);
+      setRequests(prev => prev.map(r => 
+        r.id === id ? { ...r, status: 'rejected', rejectReason: reason } : r
+      ));
+    }
   };
 
   const filteredRequests = requests.filter(r => 
@@ -78,7 +53,6 @@ export default function LeavePage({ onBack }: { onBack: () => void }) {
           <h1 className="font-bold text-lg text-slate-800 tracking-tight">请假审批</h1>
         </div>
         
-        {/* Tabs */}
         <div className="flex p-1 bg-slate-100/80 rounded-2xl backdrop-blur-sm border border-slate-200/50">
           <button
             onClick={() => setActiveTab('pending')}
@@ -125,7 +99,7 @@ export default function LeavePage({ onBack }: { onBack: () => void }) {
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-sm transition-transform group-hover:scale-110 ${
-                    request.type === 'sick' 
+                    request.type === '病假' 
                       ? 'bg-red-50 text-red-500 ring-2 ring-red-100' 
                       : 'bg-blue-50 text-blue-500 ring-2 ring-blue-100'
                   }`}>
@@ -135,16 +109,16 @@ export default function LeavePage({ onBack }: { onBack: () => void }) {
                     <div className="font-bold text-slate-800 flex items-center gap-2 text-base">
                       {request.studentName}
                       <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border ${
-                        request.type === 'sick' 
+                        request.type === '病假' 
                           ? 'bg-red-50 text-red-600 border-red-100' 
                           : 'bg-blue-50 text-blue-600 border-blue-100'
                       }`}>
-                        {request.type === 'sick' ? '病假' : '事假'}
+                        {request.type}
                       </span>
                     </div>
                     <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
                       <Clock size={12} className="text-slate-300" />
-                      {request.createdAt}
+                      {(request.createdAt.includes('T') ? request.createdAt.split('T')[0] : request.createdAt.split(' ')[0])}
                     </div>
                   </div>
                 </div>
@@ -162,10 +136,10 @@ export default function LeavePage({ onBack }: { onBack: () => void }) {
               <div className="bg-slate-50/80 rounded-xl p-4 space-y-2.5 mb-5 border border-slate-100">
                 <div className="flex gap-2 text-sm">
                   <span className="text-slate-400 w-16 flex-shrink-0 flex items-center gap-1.5 font-medium">
-                    <Calendar size={14} /> 时间
+                    <Calendar size={14} /> 日期
                   </span>
                   <span className="text-slate-700 font-bold break-all tracking-tight">
-                    {request.startDate} 至 {request.endDate}
+                    {request.date}
                   </span>
                 </div>
                 <div className="flex gap-2 text-sm">

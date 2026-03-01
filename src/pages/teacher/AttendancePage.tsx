@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, CalendarCheck } from 'lucide-react';
-import AttendanceView from '../components/AttendanceView';
-import { dataManager } from '../utils/dataManager';
+import AttendanceView from '../../components/AttendanceView';
+import { dataManager } from '../../utils/dataManager';
 
 interface AttendancePageProps {
   classId: string;
