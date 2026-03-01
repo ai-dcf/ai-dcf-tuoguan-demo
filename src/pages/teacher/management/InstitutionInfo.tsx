@@ -7,10 +7,10 @@ interface InstitutionInfoProps {
 
 const InstitutionInfo: React.FC<InstitutionInfoProps> = ({ onBack }) => {
   const [formData, setFormData] = useState({
-    name: '快乐托管中心',
-    phone: '13800138000',
-    address: '北京市海淀区中关村大街1号',
-    description: '专注小学生课后托管服务，提供作业辅导、素质拓展等课程。'
+    name: '星星托管',
+    phone: '17770091273',
+    address: '中福城对面30号店铺',
+    description: '精品小班、作业规范、习惯养成、营养膳食。活动期间（2月24日-3月4日）报名有礼，老带新立减100元！'
   });
 
   const [isSaving, setIsSaving] = useState(false);
