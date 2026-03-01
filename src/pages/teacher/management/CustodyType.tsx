@@ -24,7 +24,7 @@ const CustodyType: React.FC<CustodyTypeProps> = ({ onBack }) => {
         const typeToAdd = { id: Date.now(), name: newType.name };
         dataManager.addCustodyType(typeToAdd);
       }
-      setTypes(dataManager.getCustodyTypes());
+      setTypes([...dataManager.getCustodyTypes()]); // Spread to force re-render
       setShowModal(false);
       setNewType({ name: '' });
       setEditingType(null);
@@ -55,66 +55,64 @@ const CustodyType: React.FC<CustodyTypeProps> = ({ onBack }) => {
 
     if (window.confirm(`确定要删除“${type.name}”托管类型吗？`)) {
       dataManager.deleteCustodyType(type.id);
-      setTypes(dataManager.getCustodyTypes());
+      setTypes([...dataManager.getCustodyTypes()]); // Spread to force re-render
     }
   };
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen font-sans selection:bg-blue-100">
+    <div className="bg-background min-h-screen font-sans flex flex-col">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 flex items-center justify-between shadow-sm transition-all duration-300">
+      <div className="bg-background/90 backdrop-blur-xl px-4 py-3 border-b-2 border-border-main/10 sticky top-0 z-10 flex items-center justify-between shadow-sm transition-all duration-300">
         <button 
           onClick={onBack} 
-          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-border-main text-text-main shadow-pop active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft size={24} strokeWidth={3} />
         </button>
-        <h1 className="font-bold text-lg text-slate-800 tracking-tight">托管类型维护</h1>
+        <h1 className="font-black text-lg text-text-main tracking-tight">托管类型维护</h1>
         <button 
           onClick={handleOpenAdd} 
-          className="p-2 -mr-2 text-blue-600 hover:bg-blue-50 active:scale-95 rounded-full transition-all"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary text-text-main border-2 border-border-main shadow-sm active:scale-95 transition-all"
         >
-          <Plus size={24} />
+          <Plus size={24} strokeWidth={3} />
         </button>
       </div>
 
       {/* List */}
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-3 flex-1 overflow-y-auto">
         {types.map((type, index) => (
           <div 
             key={type.id} 
-            className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 fill-mode-backwards"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className="bg-white rounded-[2rem] p-5 shadow-pop border-2 border-border-main hover:-translate-y-0.5 transition-all duration-300 group flex justify-between items-center"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-slate-800 text-lg tracking-tight group-hover:text-blue-600 transition-colors">{type.name}</h3>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => handleOpenEdit(type)}
-                  className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all active:scale-90 bg-slate-50 border border-slate-100"
-                >
-                  <Edit2 size={18} />
-                </button>
-                <button 
-                  onClick={() => handleDelete(type)}
-                  className="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all active:scale-90 bg-slate-50 border border-slate-100"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
+            <h3 className="font-black text-text-main text-lg tracking-tight pl-2 border-l-4 border-secondary/50">{type.name}</h3>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => handleOpenEdit(type)}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-sun border-2 border-border-main text-text-main hover:bg-secondary transition-all active:scale-95"
+              >
+                <Edit2 size={16} strokeWidth={2.5} />
+              </button>
+              <button 
+                onClick={() => handleDelete(type)}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-sun border-2 border-border-main text-text-main hover:bg-primary hover:text-white transition-all active:scale-95"
+              >
+                <Trash2 size={16} strokeWidth={2.5} />
+              </button>
             </div>
           </div>
         ))}
         
         {types.length === 0 && (
           <div className="text-center py-20">
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-slate-100 animate-pulse-slow">
-              <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center">
-                <Plus size={32} className="text-slate-300" />
+            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-pop border-2 border-border-main">
+              <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center border-2 border-border-main/20">
+                <Plus size={32} className="text-text-light" strokeWidth={2.5} />
               </div>
             </div>
-            <h3 className="text-slate-800 font-bold text-lg mb-2">暂无托管类型</h3>
-            <p className="text-slate-400 text-sm max-w-[200px] mx-auto leading-relaxed">
+            <h3 className="text-text-main font-black text-lg mb-2">暂无托管类型</h3>
+            <p className="text-text-light text-sm max-w-[200px] mx-auto leading-relaxed font-bold">
               还没有添加任何托管类型，点击右上角加号开始添加吧
             </p>
           </div>
@@ -123,33 +121,34 @@ const CustodyType: React.FC<CustodyTypeProps> = ({ onBack }) => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-          <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setShowModal(false)} />
-          <div className="bg-white rounded-[2rem] w-full max-w-md overflow-hidden shadow-2xl scale-100 animate-in zoom-in-95 duration-300 relative z-10 ring-1 ring-black/5">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 backdrop-blur-xl">
-              <h3 className="font-bold text-xl text-slate-800 tracking-tight">{editingType ? '编辑托管类型' : '添加托管类型'}</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setShowModal(false)} />
+          <div className="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden shadow-pop scale-100 animate-in zoom-in-95 duration-300 relative z-10 border-2 border-border-main">
+            <div className="px-6 py-4 border-b-2 border-border-main/10 flex justify-between items-center bg-background">
+              <h3 className="font-black text-lg text-text-main tracking-tight">{editingType ? '编辑托管类型' : '添加托管类型'}</h3>
               <button 
                 onClick={() => setShowModal(false)} 
-                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all active:scale-90"
+                className="p-1.5 text-text-light hover:text-text-main hover:bg-black/5 rounded-full transition-all active:scale-90"
               >
-                <X size={20} />
+                <X size={24} strokeWidth={2.5} />
               </button>
             </div>
             <div className="p-6 space-y-6">
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-slate-700 ml-1">类型名称</label>
+                <label className="block text-sm font-black text-text-main ml-1">类型名称</label>
                 <input
                   type="text"
                   value={newType.name}
                   onChange={e => setNewType({ name: e.target.value })}
-                  className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800 placeholder:text-slate-400 font-medium hover:bg-white"
+                  className="w-full px-4 py-3.5 bg-background border-2 border-border-main rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/20 transition-all text-text-main placeholder:text-text-light font-bold"
                   placeholder="如：午托"
+                  autoFocus
                 />
               </div>
               <button
                 onClick={handleSave}
                 disabled={!newType.name}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 active:scale-[0.98] transition-all disabled:opacity-50 disabled:shadow-none mt-4 hover:brightness-110"
+                className="w-full bg-primary text-white py-3.5 rounded-xl font-black text-lg shadow-pop border-2 border-border-main hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:shadow-none mt-2 active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
               >
                 {editingType ? '保存修改' : '确认添加'}
               </button>

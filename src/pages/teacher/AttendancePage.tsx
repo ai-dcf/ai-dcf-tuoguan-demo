@@ -13,30 +13,30 @@ const AttendancePage: React.FC<AttendancePageProps> = ({ classId, onBack }) => {
   const className = cls ? cls.name : '未知班级';
 
   return (
-    <div className="flex flex-col h-screen bg-[#F5F7FA]">
+    <div className="flex flex-col h-screen bg-background font-sans">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-md border-b border-slate-100/50 px-4 py-3 flex items-center gap-3 sticky top-0 z-50">
+      <div className="bg-background/90 backdrop-blur-md border-b-2 border-border-main/10 px-5 py-4 flex items-center gap-4 sticky top-0 z-50">
         <button 
           onClick={onBack} 
-          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/50 rounded-full transition-colors active:scale-95"
+          className="w-10 h-10 rounded-full bg-white border-2 border-border-main flex items-center justify-center text-text-main shadow-pop active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={24} strokeWidth={3} />
         </button>
-        <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
-                <CalendarCheck size={18} />
+        <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-accent text-text-main rounded-xl border-2 border-border-main flex items-center justify-center shadow-pop">
+                <CalendarCheck size={20} strokeWidth={2.5} />
             </div>
             <div>
-                <h1 className="font-bold text-lg text-slate-800 tracking-tight leading-tight">
+                <h1 className="font-black text-xl text-text-main leading-tight">
                 考勤打卡
                 </h1>
-                <p className="text-[10px] text-slate-500 font-medium leading-tight">{className}</p>
+                <p className="text-xs text-text-light font-bold mt-0.5">{className}</p>
             </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto bg-[#F5F7FA]">
+      <div className="flex-1 overflow-y-auto bg-background">
         <AttendanceView />
       </div>
     </div>

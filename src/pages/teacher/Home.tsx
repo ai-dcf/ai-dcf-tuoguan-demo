@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { BookOpen, UserCheck, CalendarX, FileText, Bell, ChevronRight, X, Sparkles, MapPin } from 'lucide-react';
+import React, { useState } from 'react';
+import { BookOpen, UserCheck, CalendarX, FileText, Bell, ChevronRight, X, Sparkles, MapPin, Star } from 'lucide-react';
 import type { TeacherViewState as ViewState } from '../../types';
 import { dataManager } from '../../utils/dataManager';
 
@@ -26,63 +26,60 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
   const dinnerClasses = activeClasses.filter(c => c.custodyType === '晚托');
 
   return (
-    <div className="bg-slate-50 min-h-screen relative pb-20">
+    <div className="min-h-screen relative pb-24">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-md px-5 py-4 border-b border-slate-100 flex justify-between items-center sticky top-0 z-20">
+      <div className="px-5 py-6 flex justify-between items-center sticky top-0 z-20 bg-background/90 backdrop-blur-sm">
         <div>
-          <h1 className="font-extrabold text-xl text-slate-900 tracking-tight flex items-center gap-2">
+          <h1 className="font-black text-2xl text-text-main tracking-tight flex items-center gap-2">
             未来托管中心
-            <span className="bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-medium">旗舰版</span>
+            <span className="bg-accent text-text-main text-[10px] px-2 py-1 rounded-md border-2 border-border-main shadow-pop-sm font-bold">旗舰版</span>
           </h1>
-          <p className="text-xs text-slate-500 flex items-center mt-1">
+          <p className="text-xs font-bold text-text-muted flex items-center mt-1">
             <MapPin size={12} className="mr-1" /> 徐汇校区
           </p>
         </div>
-        <button className="w-9 h-9 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 transition-colors relative">
-          <Bell size={18} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+        <button className="w-10 h-10 bg-white border-2 border-border-main rounded-full flex items-center justify-center text-text-main shadow-pop-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all relative">
+          <Bell size={20} />
+          <span className="absolute top-0 right-0 w-3 h-3 bg-primary rounded-full border-2 border-border-main"></span>
         </button>
       </div>
 
-      {/* Hero / Welcome (Optional - keeping it simple for now) */}
-      
       {/* Shortcuts */}
-      <div className="bg-white px-4 py-6 mb-3 shadow-sm border-b border-slate-100">
-        <div className="grid grid-cols-4 gap-y-6">
-          <Shortcut 
-            icon={<div className="bg-blue-50 text-blue-600 w-full h-full flex items-center justify-center rounded-2xl"><BookOpen size={24} /></div>} 
-            label="错题本" 
-            onClick={() => handleShortcutClick('mistake')} 
-          />
-          <Shortcut 
-            icon={<div className="bg-green-50 text-green-600 w-full h-full flex items-center justify-center rounded-2xl"><UserCheck size={24} /></div>} 
-            label="签到" 
-            onClick={() => handleShortcutClick('attendance')} 
-          />
-          <Shortcut 
-            icon={<div className="bg-orange-50 text-orange-600 w-full h-full flex items-center justify-center rounded-2xl"><CalendarX size={24} /></div>} 
-            label="请假" 
-            onClick={() => onNavigate('leave')} 
-          />
-          <Shortcut 
-            icon={<div className="bg-purple-50 text-purple-600 w-full h-full flex items-center justify-center rounded-2xl"><FileText size={24} /></div>} 
-            label="作业" 
-            onClick={() => handleShortcutClick('homework')} 
-          />
-          {/* Added a decorative or 'More' item if needed, but sticking to 4 cols for better spacing */}
+      <div className="px-5 mb-8">
+        <div className="bg-white rounded-3xl border-2 border-border-main shadow-pop-lg p-6">
+          <div className="grid grid-cols-4 gap-4">
+            <Shortcut 
+              icon={<BookOpen size={24} />} 
+              label="错题本" 
+              color="bg-secondary"
+              onClick={() => handleShortcutClick('mistake')} 
+            />
+            <Shortcut 
+              icon={<UserCheck size={24} />} 
+              label="签到" 
+              color="bg-accent"
+              onClick={() => handleShortcutClick('attendance')} 
+            />
+            <Shortcut 
+              icon={<CalendarX size={24} />} 
+              label="请假" 
+              color="bg-primary"
+              onClick={() => onNavigate('leave')} 
+            />
+            <Shortcut 
+              icon={<FileText size={24} />} 
+              label="作业" 
+              color="bg-secondary-light"
+              onClick={() => handleShortcutClick('homework')} 
+            />
+          </div>
         </div>
       </div>
 
       {/* Lunch Care Section */}
-      <div className="px-5 py-3">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-slate-800 font-bold text-base flex items-center gap-2">
-            <span className="w-1 h-4 bg-blue-500 rounded-full"></span>
-            午托班级
-          </h2>
-          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{lunchClasses.length}个班级</span>
-        </div>
-        <div className="space-y-3">
+      <div className="px-5 py-2 mb-6">
+        <SectionHeader title="午托班级" count={lunchClasses.length} color="text-primary" />
+        <div className="space-y-4">
           {lunchClasses.length > 0 ? lunchClasses.map(cls => (
             <ClassCard 
               key={cls.id}
@@ -90,26 +87,18 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
               stats={{ uncheck: cls.studentCount, present: 0, leave: 0 }}
               pendingHomework={3} // Mock data
               onClick={() => onSelectClass(cls.id.toString())}
-              gradient="from-blue-50 to-white"
+              theme="warm"
             />
           )) : (
-            <div className="text-sm text-slate-400 text-center py-4 bg-white rounded-2xl border border-dashed border-slate-200">
-              暂无午托班级
-            </div>
+            <EmptyState label="暂无午托班级" />
           )}
         </div>
       </div>
 
       {/* Dinner Care Section */}
       <div className="px-5 py-2">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-slate-800 font-bold text-base flex items-center gap-2">
-            <span className="w-1 h-4 bg-indigo-500 rounded-full"></span>
-            晚托班级
-          </h2>
-          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{dinnerClasses.length}个班级</span>
-        </div>
-        <div className="space-y-3">
+        <SectionHeader title="晚托班级" count={dinnerClasses.length} color="text-secondary" />
+        <div className="space-y-4">
           {dinnerClasses.length > 0 ? dinnerClasses.map(cls => (
             <ClassCard 
               key={cls.id}
@@ -117,12 +106,10 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
               stats={{ uncheck: cls.studentCount, present: 0, leave: 0 }}
               pendingHomework={1} // Mock data
               onClick={() => onSelectClass(cls.id.toString())}
-              gradient="from-indigo-50 to-white"
+              theme="cool"
             />
           )) : (
-            <div className="text-sm text-slate-400 text-center py-4 bg-white rounded-2xl border border-dashed border-slate-200">
-              暂无晚托班级
-            </div>
+            <EmptyState label="暂无晚托班级" />
           )}
         </div>
       </div>
@@ -130,53 +117,48 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
       {/* Class Selector Modal */}
       {showClassSelector.show && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowClassSelector({ ...showClassSelector, show: false })} />
+          <div className="absolute inset-0 bg-text-main/40 backdrop-blur-sm" onClick={() => setShowClassSelector({ ...showClassSelector, show: false })} />
           
-          <div className="bg-white w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl z-10 animate-in zoom-in-95 duration-300">
-            <div className="px-5 py-4 border-b border-slate-50 flex justify-between items-center bg-white">
+          <div className="bg-white w-full max-w-sm rounded-3xl border-2 border-border-main shadow-pop-xl overflow-hidden z-10 animate-in zoom-in-95 duration-300">
+            <div className="px-6 py-5 border-b-2 border-border-main flex justify-between items-center bg-accent">
               <div>
-                <h3 className="font-bold text-lg text-slate-800">选择班级</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <h3 className="font-black text-xl text-text-main">选择班级</h3>
+                <p className="text-xs font-bold text-text-main/70 mt-0.5">
                   前往 {showClassSelector.type === 'attendance' ? '签到' : showClassSelector.type === 'mistake' ? '错题本' : '作业点评'}
                 </p>
               </div>
               <button 
                 onClick={() => setShowClassSelector({ ...showClassSelector, show: false })} 
-                className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-colors"
+                className="w-8 h-8 rounded-full bg-white border-2 border-border-main flex items-center justify-center text-text-main hover:bg-primary hover:text-white transition-colors"
               >
                 <X size={20} />
               </button>
             </div>
             
-            <div className="p-4 max-h-[60vh] overflow-y-auto">
+            <div className="p-4 max-h-[60vh] overflow-y-auto bg-white">
               {classes.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {classes.map(cls => (
                     <button 
                       key={cls.id} 
                       onClick={() => handleClassSelect(cls.id.toString())} 
-                      className="w-full p-4 text-left bg-slate-50 hover:bg-blue-50/50 border border-transparent hover:border-blue-100 rounded-xl flex justify-between items-center group transition-all duration-200"
+                      className="w-full p-4 text-left bg-white hover:bg-surface-muted border-2 border-border-main rounded-2xl flex justify-between items-center group transition-all active:translate-x-[2px] active:translate-y-[2px] shadow-pop active:shadow-none"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-400 shadow-sm border border-slate-100 font-bold text-sm">
+                        <div className="w-10 h-10 rounded-full bg-secondary border-2 border-border-main flex items-center justify-center text-text-main font-black text-sm">
                           {cls.name.charAt(0)}
                         </div>
                         <div>
-                          <span className="font-bold text-slate-700 block">{cls.name}</span>
-                          <span className="text-xs text-slate-400">{cls.students.length}名学生</span>
+                          <span className="font-bold text-text-main block">{cls.name}</span>
+                          <span className="text-xs font-bold text-text-muted">{cls.students.length}名学生</span>
                         </div>
                       </div>
-                      <ChevronRight size={20} className="text-slate-300 group-hover:text-blue-400 transition-colors" />
+                      <ChevronRight size={20} className="text-text-main" />
                     </button>
                   ))}
                 </div>
               ) : (
-                <div className="py-12 flex flex-col items-center justify-center text-slate-400">
-                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
-                    <Sparkles size={24} className="text-slate-300" />
-                  </div>
-                  <p className="text-sm">暂无班级数据</p>
-                </div>
+                <EmptyState label="暂无班级数据" />
               )}
             </div>
           </div>
@@ -186,15 +168,31 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectClass, onNavigate }) => {
   );
 };
 
-const Shortcut = ({ icon, label, onClick }: { icon: React.ReactNode, label: string, onClick?: () => void }) => (
+const SectionHeader = ({ title, count, color }: { title: string, count: number, color: string }) => (
+  <div className="flex items-center justify-between mb-4 pl-1">
+    <h2 className="text-[#2D3436] font-black text-lg flex items-center gap-2">
+      <Star size={20} className={color} fill="currentColor" />
+      {title}
+    </h2>
+    <span className="text-xs font-bold text-[#2D3436] bg-white border-2 border-[#2D3436] px-3 py-1 rounded-full shadow-[2px_2px_0px_0px_#2D3436]">{count}个班级</span>
+  </div>
+);
+
+const EmptyState = ({ label }: { label: string }) => (
+  <div className="text-sm font-bold text-[#B2BEC3] text-center py-8 bg-white rounded-3xl border-2 border-dashed border-[#B2BEC3]">
+    {label}
+  </div>
+);
+
+const Shortcut = ({ icon, label, onClick, color }: { icon: React.ReactNode, label: string, onClick?: () => void, color: string }) => (
   <button 
     onClick={onClick} 
     className="flex flex-col items-center gap-2 active:scale-95 transition-transform group w-full"
   >
-    <div className="w-14 h-14 rounded-2xl shadow-sm group-hover:shadow-md transition-shadow duration-200">
+    <div className={`w-14 h-14 rounded-2xl border-2 border-[#2D3436] shadow-[4px_4px_0px_0px_#2D3436] group-hover:shadow-[6px_6px_0px_0px_#2D3436] group-active:shadow-[2px_2px_0px_0px_#2D3436] group-active:translate-x-[2px] group-active:translate-y-[2px] transition-all duration-200 flex items-center justify-center text-[#2D3436] ${color}`}>
       {icon}
     </div>
-    <span className="text-xs font-medium text-slate-600 group-hover:text-slate-900">{label}</span>
+    <span className="text-xs font-bold text-[#2D3436]">{label}</span>
   </button>
 );
 
@@ -203,54 +201,55 @@ const ClassCard = ({
   stats, 
   pendingHomework, 
   onClick,
-  gradient = "from-white to-white"
+  theme = 'warm'
 }: { 
   title: string, 
   stats: { uncheck: number, present: number, leave: number }, 
   pendingHomework: number,
   onClick: () => void,
-  gradient?: string
+  theme?: 'warm' | 'cool'
 }) => (
   <div 
     onClick={onClick}
-    className={`bg-gradient-to-br ${gradient} rounded-2xl p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-slate-100 active:scale-[0.98] transition-all cursor-pointer hover:shadow-md relative overflow-hidden group`}
+    className="bg-white rounded-3xl p-5 border-2 border-border-main shadow-pop active:translate-x-[2px] active:translate-y-[2px] active:shadow-pop-sm transition-all cursor-pointer group relative overflow-hidden"
   >
-    {/* Decorative circle */}
-    <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-colors" />
+    {/* Decorative background shape */}
+    <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-20 group-hover:scale-110 transition-transform ${theme === 'warm' ? 'bg-primary' : 'bg-secondary'}`} />
 
     <div className="flex justify-between items-start mb-4 relative z-10">
       <div>
-        <h3 className="font-bold text-lg text-slate-800 tracking-tight">{title}</h3>
-        <p className="text-xs text-slate-400 mt-0.5 font-medium">今日课程进行中</p>
+        <h3 className="font-black text-lg text-text-main tracking-tight">{title}</h3>
+        <div className="flex items-center gap-1 mt-1">
+          <div className={`w-2 h-2 rounded-full ${theme === 'warm' ? 'bg-primary' : 'bg-secondary'}`}></div>
+          <p className="text-xs text-text-muted font-bold">今日课程进行中</p>
+        </div>
       </div>
-      <button className="w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-white shadow-sm transition-colors">
+      <button className="w-8 h-8 rounded-full bg-white border-2 border-border-main flex items-center justify-center text-text-main group-hover:bg-text-main group-hover:text-white transition-colors">
         <ChevronRight size={18} />
       </button>
     </div>
     
-    <div className="grid grid-cols-3 gap-2 mb-4 relative z-10">
-      <div className="bg-white/60 rounded-lg p-2 flex flex-col items-center justify-center border border-slate-50">
-        <span className="text-xs text-slate-400 mb-1">未点名</span>
-        <span className={`font-bold text-base ${stats.uncheck > 0 ? 'text-red-500' : 'text-slate-700'}`}>{stats.uncheck}</span>
-      </div>
-      <div className="bg-white/60 rounded-lg p-2 flex flex-col items-center justify-center border border-slate-50">
-        <span className="text-xs text-slate-400 mb-1">实到</span>
-        <span className="font-bold text-base text-green-600">{stats.present}</span>
-      </div>
-      <div className="bg-white/60 rounded-lg p-2 flex flex-col items-center justify-center border border-slate-50">
-        <span className="text-xs text-slate-400 mb-1">请假</span>
-        <span className="font-bold text-base text-slate-600">{stats.leave}</span>
-      </div>
+    <div className="flex gap-2 mb-4 relative z-10">
+      <StatBadge label="未点名" value={stats.uncheck} highlight={stats.uncheck > 0} />
+      <StatBadge label="实到" value={stats.present} />
+      <StatBadge label="请假" value={stats.leave} />
     </div>
 
     {pendingHomework > 0 && (
-      <div className="flex items-center gap-2 bg-orange-50/80 border border-orange-100 px-3 py-2 rounded-xl relative z-10">
-        <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-        <span className="text-xs text-orange-700 font-medium">
-          有 <span className="font-bold">{pendingHomework}</span> 份作业待批改
+      <div className="flex items-center gap-2 bg-accent/20 border-2 border-accent px-3 py-2 rounded-xl relative z-10">
+        <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+        <span className="text-xs text-text-main font-bold">
+          有 <span className="text-primary-dark">{pendingHomework}</span> 份作业待批改
         </span>
       </div>
     )}
+  </div>
+);
+
+const StatBadge = ({ label, value, highlight = false }: { label: string, value: number, highlight?: boolean }) => (
+  <div className={`flex-1 rounded-xl p-2 flex flex-col items-center justify-center border-2 ${highlight ? 'bg-primary/10 border-primary' : 'bg-surface-muted border-transparent'}`}>
+    <span className={`text-[10px] font-bold mb-0.5 ${highlight ? 'text-primary' : 'text-text-muted'}`}>{label}</span>
+    <span className={`font-black text-base ${highlight ? 'text-primary' : 'text-text-main'}`}>{value}</span>
   </div>
 );
 

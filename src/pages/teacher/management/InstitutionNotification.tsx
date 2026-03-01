@@ -19,38 +19,38 @@ const NotificationDetailView: React.FC<{
   onDelete: (id: number) => void;
 }> = ({ notification, onBack, onDelete }) => {
   return (
-    <div className="bg-slate-50/50 min-h-screen flex flex-col">
-      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 flex items-center justify-between sticky top-0 z-10 shadow-sm transition-all duration-300">
+    <div className="bg-background min-h-screen flex flex-col font-sans">
+      <div className="bg-background/90 backdrop-blur-md px-4 py-3 border-b-2 border-border-main/10 flex items-center justify-between sticky top-0 z-10 shadow-sm transition-all duration-300">
         <button 
           onClick={onBack} 
-          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-border-main text-text-main shadow-pop active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft size={24} strokeWidth={3} />
         </button>
-        <h1 className="font-bold text-lg text-slate-800 tracking-tight">通知详情</h1>
+        <h1 className="font-black text-lg text-text-main tracking-tight">通知详情</h1>
         <button 
           onClick={() => onDelete(notification.id)} 
-          className="p-2 -mr-2 text-red-500 hover:bg-red-50 active:scale-95 rounded-full transition-all"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white border-2 border-border-main shadow-pop active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
         >
-          <Trash2 size={20} />
+          <Trash2 size={20} strokeWidth={2.5} />
         </button>
       </div>
 
       <div className="p-4 space-y-4">
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-800 mb-3 leading-tight tracking-tight">{notification.title}</h2>
-          <div className="flex items-center gap-4 text-xs text-slate-400 mb-6 pb-4 border-b border-slate-50">
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-full">
-              <Clock size={12} />
+        <div className="bg-white p-6 rounded-[2rem] border-2 border-border-main shadow-pop">
+          <h2 className="text-xl font-black text-text-main mb-3 leading-tight tracking-tight">{notification.title}</h2>
+          <div className="flex items-center gap-4 text-xs text-text-light mb-6 pb-4 border-b-2 border-border-main/10 font-bold">
+            <div className="flex items-center gap-1.5 bg-background px-2.5 py-1 rounded-full border border-border-main/20">
+              <Clock size={12} strokeWidth={2.5} />
               <span>{notification.date}</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-full">
-              <Bell size={12} />
+            <div className="flex items-center gap-1.5 bg-background px-2.5 py-1 rounded-full border border-border-main/20">
+              <Bell size={12} strokeWidth={2.5} />
               <span>{notification.readCount} 已读</span>
             </div>
           </div>
           
-          <div className="text-slate-600 text-base leading-relaxed whitespace-pre-wrap">
+          <div className="text-text-main text-base leading-relaxed whitespace-pre-wrap font-medium">
             {notification.content}
           </div>
         </div>
@@ -110,21 +110,21 @@ const InstitutionNotification: React.FC<InstitutionNotificationProps> = ({ onBac
   }
 
   return (
-    <div className="bg-slate-50/50 min-h-screen flex flex-col">
+    <div className="bg-background min-h-screen flex flex-col font-sans">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-md px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 flex items-center justify-between shadow-sm transition-all duration-300">
+      <div className="bg-background/90 backdrop-blur-md px-4 py-3 border-b-2 border-border-main/10 sticky top-0 z-10 flex items-center justify-between shadow-sm transition-all duration-300">
         <button 
           onClick={onBack} 
-          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-border-main text-text-main shadow-pop active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft size={24} strokeWidth={3} />
         </button>
-        <h1 className="font-bold text-lg text-slate-800 tracking-tight">机构通知</h1>
+        <h1 className="font-black text-lg text-text-main tracking-tight">机构通知</h1>
         <button 
           onClick={() => setShowModal(true)} 
-          className="p-2 -mr-2 text-blue-600 hover:bg-blue-50 active:scale-95 rounded-full transition-all"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary text-text-main border-2 border-border-main shadow-sm active:scale-95 transition-all"
         >
-          <Plus size={24} />
+          <Plus size={24} strokeWidth={3} />
         </button>
       </div>
 
@@ -134,82 +134,82 @@ const InstitutionNotification: React.FC<InstitutionNotificationProps> = ({ onBac
           <div 
             key={notice.id} 
             onClick={() => handleNotificationClick(notice)}
-            className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative group active:scale-[0.98] transition-all cursor-pointer hover:shadow-md"
+            className="bg-white p-5 rounded-[2rem] border-2 border-border-main shadow-pop relative group active:scale-[0.98] transition-all cursor-pointer hover:-translate-y-0.5"
           >
             <div className="flex justify-between items-start mb-3">
-              <h3 className="font-bold text-slate-800 text-lg line-clamp-1 flex-1 pr-4">{notice.title}</h3>
+              <h3 className="font-black text-text-main text-lg line-clamp-1 flex-1 pr-4">{notice.title}</h3>
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(notice.id);
                 }}
-                className="text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all p-1.5 -mr-1.5 -mt-1.5"
+                className="text-text-light hover:text-primary hover:bg-primary/10 rounded-full transition-all p-1.5 -mr-1.5 -mt-1.5"
               >
-                <Trash2 size={18} />
+                <Trash2 size={18} strokeWidth={2.5} />
               </button>
             </div>
-            <p className="text-sm text-slate-600 line-clamp-2 mb-4 leading-relaxed font-medium">
+            <p className="text-sm text-text-main line-clamp-2 mb-4 leading-relaxed font-medium">
               {notice.content}
             </p>
-            <div className="flex items-center justify-between text-xs text-slate-400 border-t border-slate-50 pt-3">
-              <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-0.5 rounded-full">
-                <Clock size={12} />
+            <div className="flex items-center justify-between text-xs text-text-light border-t-2 border-border-main/10 pt-3 font-bold">
+              <div className="flex items-center gap-1.5 bg-background px-2 py-0.5 rounded-full border border-border-main/20">
+                <Clock size={12} strokeWidth={2.5} />
                 <span>{notice.date}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-0.5 rounded-full">
-                <Bell size={12} />
+              <div className="flex items-center gap-1.5 bg-background px-2 py-0.5 rounded-full border border-border-main/20">
+                <Bell size={12} strokeWidth={2.5} />
                 <span>{notice.readCount} 已读</span>
               </div>
             </div>
           </div>
         ))}
         {notifications.length === 0 && (
-          <div className="text-center py-12 text-slate-400">
-            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Bell size={24} className="text-slate-300" />
+          <div className="text-center py-12 text-text-light">
+            <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-border-main">
+              <Bell size={24} className="text-text-light" strokeWidth={2.5} />
             </div>
-            <p className="text-sm font-medium">暂无通知，点击右上角发布</p>
+            <p className="text-sm font-bold">暂无通知，点击右上角发布</p>
           </div>
         )}
       </div>
 
       {/* Publish Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-xl scale-100 animate-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <h3 className="font-bold text-lg text-slate-800">发布通知</h3>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden shadow-pop scale-100 animate-in zoom-in-95 duration-200 border-2 border-border-main">
+            <div className="p-4 border-b-2 border-border-main/10 flex justify-between items-center bg-background">
+              <h3 className="font-black text-lg text-text-main">发布通知</h3>
               <button 
                 onClick={() => setShowModal(false)} 
-                className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
+                className="p-1 text-text-light hover:text-text-main hover:bg-black/5 rounded-full transition-all"
               >
-                <X size={20} />
+                <X size={24} strokeWidth={2.5} />
               </button>
             </div>
             <div className="p-5 space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5 ml-1">标题</label>
+                <label className="block text-sm font-black text-text-main mb-1.5 ml-1">标题</label>
                 <input
                   type="text"
                   value={newNotice.title}
                   onChange={e => setNewNotice({...newNotice, title: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-800 placeholder:text-slate-400"
+                  className="w-full px-4 py-2.5 bg-background border-2 border-border-main rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/20 transition-all text-text-main placeholder:text-text-light font-bold"
                   placeholder="请输入通知标题"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5 ml-1">内容</label>
+                <label className="block text-sm font-black text-text-main mb-1.5 ml-1">内容</label>
                 <textarea
                   value={newNotice.content}
                   onChange={e => setNewNotice({...newNotice, content: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-800 placeholder:text-slate-400 resize-none h-32 text-sm"
+                  className="w-full px-4 py-3 bg-background border-2 border-border-main rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/20 transition-all text-text-main placeholder:text-text-light resize-none h-32 text-sm font-medium"
                   placeholder="请输入通知详情..."
                 />
               </div>
               <button
                 onClick={handlePublish}
                 disabled={!newNotice.title || !newNotice.content}
-                className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-base shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:shadow-none mt-2"
+                className="w-full bg-primary text-white py-3 rounded-xl font-black text-base shadow-pop border-2 border-border-main hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed mt-2 active:shadow-none active:translate-x-[2px] active:translate-y-[2px]"
               >
                 立即发布
               </button>

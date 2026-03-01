@@ -1,12 +1,99 @@
 @import "tailwindcss";
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+@theme {
+  /* Brand Colors */
+  --color-primary: #FF6B6B;
+  --color-primary-light: #FF8787;
+  --color-primary-dark: #EE5253;
+  
+  --color-secondary: #4ECDC4;
+  --color-secondary-light: #72E4DB;
+  --color-secondary-dark: #45B7AF;
+  
+  --color-accent: #FFE66D;
+  --color-accent-light: #FFEF9E;
+  
+  /* Backgrounds */
+  --color-background: #FFF9F2;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F7F1E3;
+  
+  /* Text */
+  --color-text-main: #2D3436;
+  --color-text-muted: #636E72;
+  --color-text-light: #B2BEC3;
+  
+  /* Borders */
+  --color-border-main: #2D3436;
+
+  /* Shadows */
+  --shadow-pop: 4px 4px 0px 0px #2D3436;
+  --shadow-pop-sm: 2px 2px 0px 0px #2D3436;
+  --shadow-pop-lg: 6px 6px 0px 0px #2D3436;
+  --shadow-pop-xl: 8px 8px 0px 0px #2D3436;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #f8fafc; /* bg-slate-50 */
+@layer base {
+  body {
+    @apply bg-background text-text-main font-sans antialiased;
+    background-image: radial-gradient(var(--color-primary) 0.5px, transparent 0.5px), radial-gradient(var(--color-secondary) 0.5px, var(--color-background) 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-text-main;
+  }
+}
+
+@layer components {
+  /* Neo-Brutalist / Pop Button Style */
+  .btn-primary {
+    @apply bg-primary text-white font-bold py-3 px-6 rounded-2xl 
+           border-2 border-border-main shadow-pop
+           active:translate-x-[2px] active:translate-y-[2px] active:shadow-pop-sm
+           transition-all duration-200 hover:bg-primary-light;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-text-main font-bold py-3 px-6 rounded-2xl 
+           border-2 border-border-main shadow-pop
+           active:translate-x-[2px] active:translate-y-[2px] active:shadow-pop-sm
+           transition-all duration-200 hover:bg-secondary-light;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-text-main font-bold py-2 px-4 rounded-xl
+           hover:bg-text-main/5 transition-colors;
+  }
+
+  /* Pop Card Style */
+  .card {
+    @apply bg-surface rounded-3xl border-2 border-border-main shadow-pop-lg p-6;
+  }
+  
+  .card-hover {
+    @apply transition-transform duration-200 hover:-translate-y-1 hover:shadow-pop-xl;
+  }
+
+  /* Input Style */
+  .input-pop {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-border-main bg-white
+           focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary
+           placeholder:text-text-light font-medium transition-all;
+  }
+
+  /* Tag/Badge Style */
+  .tag {
+    @apply px-3 py-1 rounded-full text-xs font-bold border-2 border-border-main;
+  }
+  
+  .tag-primary {
+    @apply bg-primary text-white;
+  }
+  
+  .tag-secondary {
+    @apply bg-secondary text-text-main;
+  }
 }

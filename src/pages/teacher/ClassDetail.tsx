@@ -16,7 +16,7 @@ interface ClassDetailProps {
 type Tab = 'attendance' | 'homework' | 'review' | 'history';
 
 const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab = 'attendance' }) => {
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab as Tab);
   const cls = dataManager.getClasses().find(c => c.id.toString() === classId);
 
   const tabs = [
@@ -26,42 +26,31 @@ const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab =
     { id: 'history', label: '历史', icon: Clock },
   ];
 
-  const getStatusLabel = (status?: string) => {
-    switch(status) {
-      case 'not_started': return { label: '未开始', color: 'bg-blue-50 text-blue-500 border-blue-100' };
-      case 'in_progress': return { label: '进行中', color: 'bg-green-50 text-green-600 border-green-100' };
-      case 'closed': return { label: '已结班', color: 'bg-slate-100 text-slate-500 border-slate-200' };
-      default: return { label: '进行中', color: 'bg-green-50 text-green-600 border-green-100' };
-    }
-  };
-
-  const statusInfo = getStatusLabel(cls?.status);
-
   return (
-    <div className="flex flex-col h-screen bg-[#F5F7FA] font-sans selection:bg-blue-100">
+    <div className="flex flex-col h-screen bg-background font-sans">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 py-3 flex items-center gap-3 sticky top-0 z-50 transition-all shadow-sm">
+      <div className="bg-background/90 backdrop-blur-xl border-b-2 border-border-main/10 px-5 py-4 flex items-center gap-4 sticky top-0 z-50">
         <button 
           onClick={onBack} 
-          className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/50 rounded-full transition-colors active:scale-95"
+          className="w-10 h-10 rounded-full bg-white border-2 border-border-main flex items-center justify-center text-text-main shadow-pop active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={24} strokeWidth={3} />
         </button>
         <div>
-            <h1 className="font-bold text-lg text-slate-800 tracking-tight leading-tight flex items-center gap-2">
-            {cls?.name || (classId === 'lunch-high' ? '午托高年级' : '晚托一年级')}
-            <span className={`px-2 py-0.5 text-[10px] rounded-full border ${statusInfo.color}`}>{statusInfo.label}</span>
+            <h1 className="font-black text-xl text-text-main leading-tight flex items-center gap-2">
+              {cls?.name || '未知班级'}
+              <span className="px-2 py-0.5 text-[10px] rounded-full border-2 border-border-main bg-secondary text-text-main">进行中</span>
             </h1>
-            <p className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+            <p className="text-xs text-text-light font-bold mt-0.5 flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-secondary border border-border-main"></span>
               托管班管理
             </p>
         </div>
       </div>
 
       {/* Floating Tabs */}
-      <div className="sticky top-[61px] z-40 px-3 py-2 bg-[#F5F7FA]/95 backdrop-blur-md transition-all duration-300">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-1.5 flex justify-around ring-1 ring-black/5">
+      <div className="sticky top-[76px] z-40 px-5 py-2 bg-background/95 backdrop-blur-md">
+        <div className="bg-white rounded-2xl shadow-pop border-2 border-border-main p-2 flex justify-around">
             {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             const Icon = tab.icon;
@@ -69,14 +58,14 @@ const ClassDetail: React.FC<ClassDetailProps> = ({ classId, onBack, initialTab =
                 <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as Tab)}
-                className={`flex flex-col items-center py-2 px-1 flex-1 rounded-xl relative transition-all duration-300 ${
+                className={`flex flex-col items-center py-2 px-1 flex-1 rounded-xl relative transition-all duration-200 ${
                     isActive 
-                      ? 'bg-blue-50 text-blue-600 shadow-sm scale-105 ring-1 ring-blue-100' 
-                      : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                      ? 'bg-accent text-text-main border-2 border-border-main shadow-sm -translate-y-1' 
+                      : 'text-text-light hover:bg-surface-sun'
                 }`}
                 >
-                <Icon size={20} className={`mb-1 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} strokeWidth={isActive ? 2.5 : 2} />
-                <span className={`text-[10px] transition-all duration-300 ${isActive ? 'font-bold' : 'font-medium'}`}>{tab.label}</span>
+                <Icon size={20} className={`mb-1 transition-transform ${isActive ? 'scale-110' : ''}`} strokeWidth={isActive ? 3 : 2.5} />
+                <span className={`text-[10px] ${isActive ? 'font-black' : 'font-bold'}`}>{tab.label}</span>
                 </button>
             );
             })}

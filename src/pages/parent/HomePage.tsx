@@ -12,36 +12,36 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ activeChild, children, onChildSwitch, onNavigate }) => {
   const [showChildPicker, setShowChildPicker] = useState(false);
-  const attendance = dataManager.getChildAttendance(activeChild.id, '2026-02-25');
+  const attendance = dataManager.getChildAttendance(activeChild.id, '2026-03-01');
   const homeworks = dataManager.getChildHomeworks(activeChild.id);
   const review = dataManager.getChildReviews(activeChild.id)[0];
   const mistakes = dataManager.getChildMistakes(activeChild.id);
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full">
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-md px-5 py-4 border-b border-slate-100 flex justify-between items-center sticky top-0 z-20 shadow-sm">
+      <div className="bg-background/90 backdrop-blur-md px-5 py-6 flex justify-between items-center sticky top-0 z-20">
         <div className="relative">
           <button 
             onClick={() => setShowChildPicker(!showChildPicker)}
             className="flex items-center gap-3 active:scale-95 transition-all group"
           >
-            <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all border-2 border-white">
+            <div className="w-12 h-12 bg-primary border-2 border-border-main rounded-full flex items-center justify-center text-white font-black text-lg shadow-pop-sm group-hover:translate-x-[1px] group-hover:translate-y-[1px] group-hover:shadow-none transition-all">
               {activeChild.name[0]}
             </div>
             <div className="text-left">
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-slate-900 text-lg">{activeChild.name}</span>
-                <ChevronDown size={16} className={`text-slate-400 transition-transform duration-300 ${showChildPicker ? 'rotate-180' : ''}`} />
+                <span className="font-black text-text-main text-xl">{activeChild.name}</span>
+                <ChevronDown size={20} className={`text-text-main transition-transform duration-300 stroke-[3px] ${showChildPicker ? 'rotate-180' : ''}`} />
               </div>
-              <span className="text-xs text-slate-500 font-medium">{activeChild.grade} {activeChild.class}</span>
+              <span className="text-xs text-text-muted font-bold bg-white border-2 border-border-main px-2 py-0.5 rounded-full inline-block mt-0.5">{activeChild.grade} {activeChild.class}</span>
             </div>
           </button>
 
           {showChildPicker && (
             <>
               <div className="fixed inset-0 z-30" onClick={() => setShowChildPicker(false)}></div>
-              <div className="absolute top-full left-0 mt-3 w-56 bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 z-40 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              <div className="absolute top-full left-0 mt-3 w-60 bg-white rounded-2xl border-2 border-border-main shadow-pop-lg z-40 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 {children.map(child => (
                   <button
                     key={child.id}
@@ -49,14 +49,14 @@ const HomePage: React.FC<HomePageProps> = ({ activeChild, children, onChildSwitc
                       onChildSwitch(child);
                       setShowChildPicker(false);
                     }}
-                    className={`w-full px-5 py-4 flex items-center gap-3 hover:bg-slate-50 transition-colors ${activeChild.id === child.id ? 'bg-blue-50/50' : ''}`}
+                    className={`w-full px-5 py-4 flex items-center gap-3 hover:bg-surface-muted transition-colors border-b-2 border-border-main last:border-b-0 ${activeChild.id === child.id ? 'bg-accent/30' : ''}`}
                   >
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shadow-sm ${activeChild.id === child.id ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-sm border-2 border-border-main ${activeChild.id === child.id ? 'bg-primary text-white' : 'bg-white text-text-main'}`}>
                       {child.name[0]}
                     </div>
                     <div className="text-left">
-                      <div className={`font-bold ${activeChild.id === child.id ? 'text-blue-600' : 'text-slate-700'}`}>{child.name}</div>
-                      <div className="text-xs text-slate-400 font-medium">{child.grade} {child.class}</div>
+                      <div className={`font-bold ${activeChild.id === child.id ? 'text-text-main' : 'text-text-muted'}`}>{child.name}</div>
+                      <div className="text-xs text-text-light font-bold">{child.grade} {child.class}</div>
                     </div>
                   </button>
                 ))}
@@ -64,64 +64,62 @@ const HomePage: React.FC<HomePageProps> = ({ activeChild, children, onChildSwitc
             </>
           )}
         </div>
-        <button className="w-11 h-11 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-500 relative active:scale-90 transition-all shadow-sm hover:shadow-md hover:text-blue-600">
-          <Bell size={22} />
-          <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+        <button className="w-12 h-12 bg-white border-2 border-border-main rounded-full flex items-center justify-center text-text-main shadow-pop-sm active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all relative">
+          <Bell size={24} strokeWidth={2.5} />
+          <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-primary rounded-full border-2 border-border-main"></span>
         </button>
       </div>
 
       <div className="p-5 space-y-8 pb-24">
         {/* Today's Status Card */}
         <section>
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 ml-1">今日动态</h2>
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2.5rem] p-1 text-white shadow-xl shadow-blue-600/20 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-500">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/30 rounded-full blur-3xl -ml-10 -mb-10"></div>
+          <div className="bg-secondary rounded-[2rem] border-2 border-border-main p-6 text-text-main shadow-pop-lg relative overflow-hidden group hover:-translate-y-1 hover:shadow-pop-xl transition-all duration-300">
+            {/* Decorative Patterns */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ffffff]/20 rounded-full -mr-10 -mt-10 border-2 border-border-main/10"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#ffffff]/20 rounded-full -ml-8 -mb-8 border-2 border-border-main/10"></div>
             
-            <div className="bg-white/5 backdrop-blur-sm rounded-[2.3rem] p-6 h-full relative z-10">
+            <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <div className="text-blue-100 text-sm font-medium mb-1">{new Date().toLocaleDateString('zh-CN', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
-                  <h3 className="text-3xl font-bold tracking-tight">你好, {activeChild.name}家长</h3>
+                  <div className="bg-white border-2 border-border-main px-3 py-1 rounded-full text-xs font-bold inline-block mb-2 shadow-pop-sm">
+                    {new Date().toLocaleDateString('zh-CN', { weekday: 'long', month: 'long', day: 'numeric' })}
+                  </div>
+                  <h3 className="text-2xl font-black tracking-tight">你好, {activeChild.name}家长</h3>
                 </div>
-                <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold border border-white/10">
+                <div className="bg-accent px-3 py-1.5 rounded-xl text-xs font-black border-2 border-border-main shadow-pop-sm">
                   在校中
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-4 border border-white/10 relative overflow-hidden">
-                  <div className="flex items-center gap-2 mb-2 text-blue-100">
-                    <div className="p-1 bg-blue-500/30 rounded-lg">
-                      <Clock size={14} />
-                    </div>
-                    <span className="text-xs font-bold opacity-80">到班时间</span>
+                <div className="bg-white rounded-2xl p-3 border-2 border-border-main shadow-pop-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock size={16} strokeWidth={3} className="text-secondary" />
+                    <span className="text-xs font-bold text-text-muted">到班</span>
                   </div>
-                  <div className="text-3xl font-black tracking-tight">{attendance?.checkIn || '--:--'}</div>
+                  <div className="text-2xl font-black tracking-tight text-text-main">{attendance?.checkIn || '--:--'}</div>
                 </div>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-4 border border-white/10 relative overflow-hidden">
-                  <div className="flex items-center gap-2 mb-2 text-blue-100">
-                    <div className="p-1 bg-indigo-500/30 rounded-lg">
-                      <Clock size={14} className="rotate-180" />
-                    </div>
-                    <span className="text-xs font-bold opacity-80">离班时间</span>
+                <div className="bg-white rounded-2xl p-3 border-2 border-border-main shadow-pop-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock size={16} strokeWidth={3} className="text-primary" />
+                    <span className="text-xs font-bold text-text-muted">离班</span>
                   </div>
-                  <div className="text-3xl font-black tracking-tight opacity-50">{attendance?.checkOut || '--:--'}</div>
+                  <div className="text-2xl font-black tracking-tight text-text-light">{attendance?.checkOut || '--:--'}</div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-white/10 rounded-2xl p-3 text-center border border-white/5">
-                  <div className="text-2xl font-bold mb-1">{homeworks.filter(h => h.status === 'completed').length}/{homeworks.length}</div>
-                  <div className="text-[10px] text-blue-100 font-medium">作业进度</div>
+              <div className="flex justify-between items-center bg-white/30 rounded-2xl p-4 border-2 border-border-main/10">
+                <div className="text-center flex-1 border-r-2 border-border-main/10">
+                  <div className="text-xl font-black mb-0.5">{homeworks.filter(h => h.status === 'completed').length}/{homeworks.length}</div>
+                  <div className="text-[10px] font-bold text-text-main/60 uppercase">作业进度</div>
                 </div>
-                <div className="bg-white/10 rounded-2xl p-3 text-center border border-white/5">
-                  <div className="text-2xl font-bold mb-1">{review?.overallRating || '-'}</div>
-                  <div className="text-[10px] text-blue-100 font-medium">今日表现</div>
+                <div className="text-center flex-1 border-r-2 border-border-main/10">
+                  <div className="text-xl font-black mb-0.5">{review?.overallRating || '-'}</div>
+                  <div className="text-[10px] font-bold text-text-main/60 uppercase">今日表现</div>
                 </div>
-                <div className="bg-white/10 rounded-2xl p-3 text-center border border-white/5">
-                  <div className="text-2xl font-bold mb-1">{mistakes.length}</div>
-                  <div className="text-[10px] text-blue-100 font-medium">新增错题</div>
+                <div className="text-center flex-1">
+                  <div className="text-xl font-black mb-0.5">{mistakes.length}</div>
+                  <div className="text-[10px] font-bold text-text-main/60 uppercase">新增错题</div>
                 </div>
               </div>
             </div>
@@ -130,105 +128,105 @@ const HomePage: React.FC<HomePageProps> = ({ activeChild, children, onChildSwitc
 
         {/* Quick Navigation */}
         <section>
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 ml-1">快捷服务</h2>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <h2 className="text-text-main font-black text-lg flex items-center gap-2">
+              <Star size={20} className="text-accent" fill="currentColor" />
+              快捷服务
+            </h2>
+          </div>
+          
           <div className="grid grid-cols-2 gap-4">
-            <button 
-              onClick={() => onNavigate('learning')}
-              className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-lg shadow-slate-200/50 flex flex-col items-center justify-center gap-4 active:scale-95 transition-all group relative overflow-hidden hover:border-blue-200"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center text-white shadow-md shadow-blue-200 group-hover:scale-110 transition-transform duration-300 relative z-10">
-                <BookOpen size={28} strokeWidth={2} />
-              </div>
-              <div className="text-center relative z-10">
-                <span className="font-bold text-slate-800 text-lg block">学情详情</span>
-                <span className="text-[10px] text-slate-400 font-medium">作业与反馈</span>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => onNavigate('mistake-detail')}
-              className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-lg shadow-slate-200/50 flex flex-col items-center justify-center gap-4 active:scale-95 transition-all group relative overflow-hidden hover:border-purple-200"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center text-white shadow-md shadow-purple-200 group-hover:scale-110 transition-transform duration-300 relative z-10">
-                <AlertCircle size={28} strokeWidth={2} />
-              </div>
-              <div className="text-center relative z-10">
-                <span className="font-bold text-slate-800 text-lg block">错题本</span>
-                <span className="text-[10px] text-slate-400 font-medium">查漏补缺</span>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => onNavigate('review')}
-              className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-lg shadow-slate-200/50 flex flex-col items-center justify-center gap-4 active:scale-95 transition-all group relative overflow-hidden hover:border-amber-200"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl flex items-center justify-center text-white shadow-md shadow-amber-200 group-hover:scale-110 transition-transform duration-300 relative z-10">
-                <Star size={28} strokeWidth={2} />
-              </div>
-              <div className="text-center relative z-10">
-                <span className="font-bold text-slate-800 text-lg block">表现点评</span>
-                <span className="text-[10px] text-slate-400 font-medium">每日成长</span>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => onNavigate('recipe')}
-              className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-lg shadow-slate-200/50 flex flex-col items-center justify-center gap-4 active:scale-95 transition-all group relative overflow-hidden hover:border-emerald-200"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-2xl flex items-center justify-center text-white shadow-md shadow-emerald-200 group-hover:scale-110 transition-transform duration-300 relative z-10">
-                <Utensils size={28} strokeWidth={2} />
-              </div>
-              <div className="text-center relative z-10">
-                <span className="font-bold text-slate-800 text-lg block">今日食谱</span>
-                <span className="text-[10px] text-slate-400 font-medium">健康饮食</span>
-              </div>
-            </button>
-
-            <button 
+            <NavCard 
+              title="学情详情" 
+              subtitle="作业与反馈" 
+              icon={BookOpen} 
+              color="bg-secondary" 
+              onClick={() => onNavigate('learning')} 
+            />
+            <NavCard 
+              title="错题本" 
+              subtitle="查漏补缺" 
+              icon={AlertCircle} 
+              color="bg-secondary-light" 
+              onClick={() => onNavigate('mistake-detail')} 
+            />
+            <NavCard 
+              title="表现点评" 
+              subtitle="每日成长" 
+              icon={Star} 
+              color="bg-accent" 
+              onClick={() => onNavigate('review')} 
+            />
+            <NavCard 
+              title="今日食谱" 
+              subtitle="健康饮食" 
+              icon={Utensils} 
+              color="bg-primary-light" 
+              onClick={() => onNavigate('recipe')} 
+            />
+            <NavCard 
+              title="请假申请" 
+              subtitle="快捷请假" 
+              icon={Clock} 
+              color="bg-primary" 
               onClick={() => onNavigate('leave-apply')}
-              className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-lg shadow-slate-200/50 flex flex-col items-center justify-center gap-4 active:scale-95 transition-all group relative overflow-hidden hover:border-rose-200"
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
-              <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl flex items-center justify-center text-white shadow-md shadow-rose-200 group-hover:scale-110 transition-transform duration-300 relative z-10">
-                <Clock size={28} strokeWidth={2} />
-              </div>
-              <div className="text-center relative z-10">
-                <span className="font-bold text-slate-800 text-lg block">请假申请</span>
-                <span className="text-[10px] text-slate-400 font-medium">快捷请假</span>
-              </div>
-            </button>
+              fullWidth 
+            />
           </div>
         </section>
 
         {/* Institution Notification */}
         <section>
           <div className="flex items-center justify-between mb-4 px-1">
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider">机构动态</h2>
-            <button className="text-xs text-blue-600 font-bold flex items-center bg-blue-50 px-3 py-1 rounded-full active:scale-95 transition-transform">查看全部 <ChevronRight size={14} /></button>
+            <h2 className="text-text-main font-black text-lg flex items-center gap-2">
+              <Bell size={20} className="text-primary" fill="currentColor" />
+              机构动态
+            </h2>
+            <button className="text-xs font-bold text-text-muted flex items-center bg-white px-3 py-1 rounded-full border-2 border-border-main shadow-pop-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all">
+              全部 <ChevronRight size={14} strokeWidth={3} />
+            </button>
           </div>
-          <div className="bg-white p-1 rounded-[2rem] border border-slate-100 shadow-lg shadow-slate-200/50 group cursor-pointer hover:shadow-xl transition-all duration-300">
-            <div className="flex gap-5 p-4">
-              <div className="w-20 h-20 bg-slate-100 rounded-2xl flex-shrink-0 overflow-hidden shadow-inner">
-                <img src="https://via.placeholder.com/150" alt="Notice" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-              </div>
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-red-50 text-red-500 text-[10px] font-bold px-2 py-0.5 rounded-md border border-red-100">置顶</span>
-                  <span className="text-[10px] text-slate-400 font-medium">2026-02-24</span>
+          
+          <div className="bg-white rounded-[2rem] border-2 border-border-main shadow-pop-lg p-5">
+            {[1, 2].map((_, i) => (
+              <div key={i} className={`flex gap-4 py-4 ${i !== 1 ? 'border-b-2 border-surface-muted' : ''}`}>
+                <div className="w-16 h-16 bg-surface-muted rounded-2xl border-2 border-border-main flex-shrink-0 flex items-center justify-center font-bold text-text-light">
+                  图
                 </div>
-                <h3 className="font-bold text-slate-800 line-clamp-1 text-base group-hover:text-blue-600 transition-colors mb-1">2026年劳动节放假安排</h3>
-                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">尊敬的家长，根据国家节假日安排，本中心将于5月1日至5月5日放假...</p>
+                <div>
+                  <h3 className="font-bold text-text-main text-sm mb-1 line-clamp-1">春季托班火热报名中，限时优惠活动开启</h3>
+                  <p className="text-xs text-text-muted line-clamp-2 leading-relaxed">
+                    为了回馈广大家长，我们推出了春季托班特别优惠活动，前50名报名可享受8折优惠...
+                  </p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-white bg-primary px-2 py-0.5 rounded-full border-2 border-border-main">活动</span>
+                    <span className="text-[10px] font-bold text-text-light">2026-02-20</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
       </div>
     </div>
   );
 };
+
+const NavCard = ({ title, subtitle, icon: Icon, color, onClick, fullWidth = false }: any) => (
+  <button 
+    onClick={onClick}
+    className={`bg-white p-5 rounded-[2rem] border-2 border-border-main shadow-pop-lg flex flex-col items-center justify-center gap-3 active:translate-x-[2px] active:translate-y-[2px] active:shadow-pop-sm transition-all group relative overflow-hidden ${fullWidth ? 'col-span-2 flex-row' : ''}`}
+  >
+    <div className={`w-14 h-14 ${color} rounded-2xl border-2 border-border-main flex items-center justify-center text-text-main shadow-pop-sm group-hover:scale-110 transition-transform duration-300 relative z-10`}>
+      <Icon size={28} strokeWidth={2.5} />
+    </div>
+    <div className={`text-center relative z-10 ${fullWidth ? 'text-left flex-1' : ''}`}>
+      <span className="font-black text-text-main text-lg block">{title}</span>
+      <span className="text-xs text-text-muted font-bold">{subtitle}</span>
+    </div>
+    {/* Decorative circle */}
+    <div className={`absolute -right-4 -top-4 w-20 h-20 rounded-full opacity-20 ${color} z-0`}></div>
+  </button>
+);
 
 export default HomePage;

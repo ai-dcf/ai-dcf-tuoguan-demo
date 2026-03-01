@@ -41,40 +41,40 @@ export default function LeavePage({ onBack }: { onBack: () => void }) {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pb-6 font-sans selection:bg-blue-100">
-      <div className="bg-white/80 backdrop-blur-xl px-4 py-3 border-b border-slate-200/60 sticky top-0 z-10 shadow-sm transition-all duration-300">
-        <div className="flex items-center gap-2 mb-3">
+    <div className="min-h-screen bg-background pb-6 font-sans">
+      <div className="bg-background/90 backdrop-blur-xl px-5 py-4 border-b-2 border-border-main/10 sticky top-0 z-10">
+        <div className="flex items-center gap-2 mb-4">
           <button 
             onClick={onBack} 
-            className="p-2 -ml-2 text-slate-600 hover:bg-slate-100/80 active:scale-95 rounded-full transition-all"
+            className="w-10 h-10 rounded-full bg-white border-2 border-border-main flex items-center justify-center text-text-main shadow-pop-sm active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
           >
-            <ChevronLeft size={22} />
+            <ChevronLeft size={24} strokeWidth={3} />
           </button>
-          <h1 className="font-bold text-lg text-slate-800 tracking-tight">请假审批</h1>
+          <h1 className="font-black text-xl text-text-main tracking-tight">请假审批</h1>
         </div>
         
-        <div className="flex p-1 bg-slate-100/80 rounded-2xl backdrop-blur-sm border border-slate-200/50">
+        <div className="flex p-1.5 bg-white rounded-2xl border-2 border-border-main shadow-pop-sm">
           <button
             onClick={() => setActiveTab('pending')}
-            className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 ${
+            className={`flex-1 py-2.5 text-sm font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 ${
               activeTab === 'pending' 
-                ? 'bg-white text-blue-600 shadow-sm scale-[1.02] ring-1 ring-black/5' 
-                : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                ? 'bg-primary text-white shadow-sm border-2 border-border-main -translate-y-0.5' 
+                : 'text-text-muted hover:bg-surface-muted'
             }`}
           >
             待审批 
             {requests.filter(r => r.status === 'pending').length > 0 && (
-              <span className="ml-1.5 inline-flex items-center justify-center bg-red-500 text-white text-[10px] h-5 min-w-[20px] px-1.5 rounded-full shadow-lg shadow-red-500/30">
+              <span className="inline-flex items-center justify-center bg-white text-primary text-[10px] h-5 min-w-[20px] px-1.5 rounded-full font-black border-2 border-border-main">
                 {requests.filter(r => r.status === 'pending').length}
               </span>
             )}
           </button>
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 ${
+            className={`flex-1 py-2.5 text-sm font-black rounded-xl transition-all duration-300 ${
               activeTab === 'history' 
-                ? 'bg-white text-blue-600 shadow-sm scale-[1.02] ring-1 ring-black/5' 
-                : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                ? 'bg-primary text-white shadow-sm border-2 border-border-main -translate-y-0.5' 
+                : 'text-text-muted hover:bg-surface-muted'
             }`}
           >
             历史记录
@@ -82,94 +82,89 @@ export default function LeavePage({ onBack }: { onBack: () => void }) {
         </div>
       </div>
 
-      <div className="p-4 space-y-4 max-w-2xl mx-auto">
+      <div className="p-5 space-y-4 max-w-2xl mx-auto">
         {filteredRequests.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-400 animate-in fade-in duration-500">
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-slate-100 border border-slate-50">
-              <FileText size={40} className="text-slate-200" />
+          <div className="flex flex-col items-center justify-center py-24 text-text-muted animate-in fade-in duration-500">
+            <div className="w-24 h-24 bg-surface-muted rounded-full flex items-center justify-center mb-4 border-2 border-border-main opacity-50">
+              <FileText size={40} className="text-text-main" strokeWidth={2} />
             </div>
-            <p className="text-sm font-medium">暂无{activeTab === 'pending' ? '待审批' : '历史'}记录</p>
+            <p className="text-sm font-bold">暂无{activeTab === 'pending' ? '待审批' : '历史'}记录</p>
           </div>
         ) : (
           filteredRequests.map(request => (
             <div 
               key={request.id} 
-              className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer group"
+              className="bg-white rounded-[2rem] p-5 shadow-pop border-2 border-border-main group"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shadow-sm transition-transform group-hover:scale-110 ${
-                    request.type === '病假' 
-                      ? 'bg-red-50 text-red-500 ring-2 ring-red-100' 
-                      : 'bg-blue-50 text-blue-500 ring-2 ring-blue-100'
-                  }`}>
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center border-2 border-primary text-primary font-black text-lg">
                     {request.studentName.charAt(0)}
                   </div>
                   <div>
-                    <div className="font-bold text-slate-800 flex items-center gap-2 text-base">
+                    <h3 className="font-black text-lg text-text-main flex items-center gap-2">
                       {request.studentName}
-                      <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border ${
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border-2 ${
                         request.type === '病假' 
-                          ? 'bg-red-50 text-red-600 border-red-100' 
-                          : 'bg-blue-50 text-blue-600 border-blue-100'
+                          ? 'bg-primary/10 text-primary border-primary' 
+                          : 'bg-accent/20 text-text-main border-border-main'
                       }`}>
                         {request.type}
                       </span>
-                    </div>
-                    <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                      <Clock size={12} className="text-slate-300" />
-                      {(request.createdAt.includes('T') ? request.createdAt.split('T')[0] : request.createdAt.split(' ')[0])}
-                    </div>
+                    </h3>
+                    <p className="text-xs text-text-muted font-bold mt-0.5">申请时间: {request.submitTime}</p>
                   </div>
                 </div>
-                {activeTab === 'history' && (
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full border shadow-sm ${
+                {request.status !== 'pending' && (
+                  <span className={`px-3 py-1 rounded-full text-xs font-black border-2 ${
                     request.status === 'approved' 
-                      ? 'bg-green-50 text-green-600 border-green-100' 
-                      : 'bg-red-50 text-red-600 border-red-100'
+                      ? 'bg-secondary/20 text-secondary-dark border-secondary' 
+                      : 'bg-text-light/20 text-text-muted border-text-muted'
                   }`}>
                     {request.status === 'approved' ? '已通过' : '已驳回'}
                   </span>
                 )}
               </div>
 
-              <div className="bg-slate-50/80 rounded-xl p-4 space-y-2.5 mb-5 border border-slate-100">
-                <div className="flex gap-2 text-sm">
-                  <span className="text-slate-400 w-16 flex-shrink-0 flex items-center gap-1.5 font-medium">
-                    <Calendar size={14} /> 日期
-                  </span>
-                  <span className="text-slate-700 font-bold break-all tracking-tight">
-                    {request.date}
-                  </span>
+              <div className="bg-surface-muted rounded-2xl p-4 mb-4 border-2 border-border-main/20 space-y-2">
+                <div className="flex items-start gap-2">
+                  <Calendar size={16} className="text-text-muted mt-0.5" strokeWidth={2.5} />
+                  <div>
+                    <span className="text-xs font-bold text-text-muted block mb-0.5">请假时间</span>
+                    <span className="text-sm font-black text-text-main">
+                      {request.startDate} {request.startTime} - {request.endDate} {request.endTime}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex gap-2 text-sm">
-                  <span className="text-slate-400 w-16 flex-shrink-0 flex items-center gap-1.5 font-medium">
-                    <FileText size={14} /> 原因
-                  </span>
-                  <span className="text-slate-700 font-medium break-all leading-relaxed">{request.reason}</span>
+                <div className="flex items-start gap-2 pt-2 border-t-2 border-border-main/10">
+                  <FileText size={16} className="text-text-muted mt-0.5" strokeWidth={2.5} />
+                  <div>
+                    <span className="text-xs font-bold text-text-muted block mb-0.5">请假事由</span>
+                    <span className="text-sm font-bold text-text-main">{request.reason}</span>
+                  </div>
                 </div>
               </div>
 
               {request.status === 'pending' && (
-                <div className="flex gap-3 pt-1">
+                <div className="flex gap-3 pt-2">
                   <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleReject(request.id);
-                    }}
-                    className="flex-1 py-3 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:border-slate-300"
+                    onClick={() => handleReject(request.id)}
+                    className="flex-1 py-3 border-2 border-border-main rounded-xl font-black text-text-main hover:bg-surface-muted active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                   >
-                    <X size={18} /> 驳回
+                    <X size={18} strokeWidth={3} /> 驳回
                   </button>
                   <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleApprove(request.id);
-                    }}
-                    className="flex-1 py-3 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:bg-blue-700 hover:shadow-blue-300"
+                    onClick={() => handleApprove(request.id)}
+                    className="flex-1 py-3 bg-secondary text-text-main border-2 border-border-main rounded-xl font-black shadow-pop-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all flex items-center justify-center gap-2 hover:bg-secondary-light"
                   >
-                    <Check size={18} strokeWidth={2.5} /> 通过
+                    <Check size={18} strokeWidth={3} /> 通过
                   </button>
+                </div>
+              )}
+              
+              {request.status === 'rejected' && request.rejectReason && (
+                <div className="mt-3 text-xs bg-primary/5 text-primary p-3 rounded-xl border-2 border-primary/20 font-bold">
+                  驳回原因: {request.rejectReason}
                 </div>
               )}
             </div>

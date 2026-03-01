@@ -140,6 +140,40 @@ class DataManager {
     return this.classes.find(c => c.id === id);
   }
 
+  addClass(cls: ClassItem) {
+    this.classes.push(cls);
+  }
+
+  updateClass(cls: ClassItem) {
+    const index = this.classes.findIndex(c => c.id === cls.id);
+    if (index !== -1) {
+      this.classes[index] = cls;
+    }
+  }
+
+  deleteClass(id: number) {
+    this.classes = this.classes.filter(c => c.id !== id);
+  }
+
+  getCustodyTypes(): CustodyType[] {
+    return this.custodyTypes;
+  }
+
+  addCustodyType(type: CustodyType) {
+    this.custodyTypes.push(type);
+  }
+
+  updateCustodyType(type: CustodyType) {
+    const index = this.custodyTypes.findIndex(t => t.id === type.id);
+    if (index !== -1) {
+      this.custodyTypes[index] = type;
+    }
+  }
+
+  deleteCustodyType(id: number) {
+    this.custodyTypes = this.custodyTypes.filter(t => t.id !== id);
+  }
+
   getMistakes(): Mistake[] {
     return [...this.mistakes];
   }
